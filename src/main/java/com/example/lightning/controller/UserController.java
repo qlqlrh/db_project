@@ -2,6 +2,7 @@ package com.example.lightning.controller;
 
 import com.example.lightning.domain.User;
 import com.example.lightning.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,11 +37,13 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String loginUser(@RequestParam("email") String email, @RequestParam("password") String password, Model model) {
+    public String loginUser(@RequestParam String email, @RequestParam String password, HttpSession session, Model model) {
         User user = userService.loginUser(email, password);
         if (user != null) {
-            model.addAttribute("name", user.getName());
-            return "welcome"; // 로그인 성공 시 웰컴 페이지
+            // 로그인 성공 시 세션에 userId 저장
+            session.setAttribute("userId", user.getUserId());
+            session.setAttribute("userName", user.getName()); // 사용자 이름 저장 (옵션)
+            return "redirect:/"; // 홈 페이지로 리다이렉트
         } else {
             model.addAttribute("error", "Invalid email or password!");
             return "login";
@@ -54,9 +57,9 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public String logout(Model model) {
-        model.addAttribute("message", "You have been logged out.");
-        return "login";
+    public String logout(HttpSession session) {
+        session.invalidate(); // 세션 무효화
+        return "redirect:/login";
     }
 
     @GetMapping("/home")
