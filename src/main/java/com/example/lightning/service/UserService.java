@@ -15,4 +15,9 @@ public class UserService {
     public User getUser() {
         return userRepository.getUser();
     }
+
+    public void saveUser(User user) {
+        // Repository에서 업데이트 메서드를 구현했다고 가정
+        userRepository.updateUser(user);
+    }
 }

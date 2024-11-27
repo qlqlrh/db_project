@@ -4,12 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Page</title>
+    <script>
+        // Edit mode toggle
+        function enableEdit() {
+            document.getElementById("userForm").querySelectorAll("input").forEach(input => input.disabled = false);
+            document.getElementById("saveButton").style.display = "inline";
+            document.getElementById("editButton").style.display = "none";
+        }
+
+        // Disable inputs after save
+        function disableEdit() {
+            document.getElementById("userForm").querySelectorAll("input").forEach(input => input.disabled = true);
+            document.getElementById("saveButton").style.display = "none";
+            document.getElementById("editButton").style.display = "inline";
+        }
+    </script>
 </head>
 <body>
 <h1>My Page</h1>
-<p><strong>이름:</strong> <span th:text="${user.name}"></span></p>
-<p><strong>학번:</strong> <span th:text="${user.studentId}"></span></p>
-<p><strong>역할:</strong> <span th:text="${user.role}"></span></p>
-<p><strong>이메일:</strong> <span th:text="${user.email}"></span></p>
+<form id="userForm" action="/mypage" method="post">
+    <label for="name">이름:</label>
+    <input type="text" id="name" name="name" value="ex.홍길동" disabled><br>
+
+    <label for="studentId">학번:</label>
+    <input type="text" id="studentId" name="studentId" value="ex.20xxxxxxx" disabled><br>
+
+    <label for="role">역할:</label>
+    <select id="role" name="role" required>
+        <option value="Freshman" th:selected="${user.role == 'Freshman'}">Freshman</option>
+        <option value="Senior Student" th:selected="${user.role == 'Senior Student'}">Senior Student</option>
+        <option value="Professor" th:selected="${user.role == 'Professor'}">Professor</option>
+        <option value="Student Council" th:selected="${user.role == 'Student Council'}">Student Council</option>
+    </select><br>
+
+    <label for="email">이메일:</label>
+    <input type="email" id="email" name="email" value="xxx@pusan.ac.kr" disabled><br>
+
+    <!-- Buttons -->
+    <button type="button" id="editButton" onclick="enableEdit()">수정하기</button>
+    <button type="submit" id="saveButton" style="display: none;" onclick="disableEdit()">저장하기</button>
+    <button type="button" onclick="history.back()">뒤로가기</button>
+</form>
 </body>
 </html>

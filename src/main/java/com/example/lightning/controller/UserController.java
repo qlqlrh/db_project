@@ -5,6 +5,8 @@ import com.example.lightning.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Controller
 public class UserController {
@@ -19,5 +21,11 @@ public class UserController {
         User user = userService.getUser();
         model.addAttribute("user", user);
         return "mypage";
+    }
+
+    @PostMapping("/mypage")
+    public String saveUser(@ModelAttribute User user) {
+        userService.saveUser(user);
+        return "redirect:/mypage";
     }
 }
