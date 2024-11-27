@@ -1,5 +1,5 @@
--- INSERT INTO User
-INSERT INTO "User" ("name", "role", "email", "password")
+-- INSERT INTO users
+INSERT INTO "users" ("name", "role", "email", "password")
 VALUES
     ('Alice', 'Freshman', 'alice@example.com', 'password123'),
     ('Bob', 'Senior Student', 'bob@example.com', 'securepass'),
