@@ -30,7 +30,6 @@ public class UserController {
         }
     }
 
-
     @GetMapping("/login")
     public String loginPage() {
         return "login";
@@ -58,5 +57,10 @@ public class UserController {
     public String logout(Model model) {
         model.addAttribute("message", "You have been logged out.");
         return "login";
+    }
+
+    @GetMapping("/home")
+    public String homePage() {
+        return "index"; // index.html 파일로 이동
     }
 }
