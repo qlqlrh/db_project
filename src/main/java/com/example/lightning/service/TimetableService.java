@@ -18,6 +18,6 @@ public class TimetableService {
     }
 
     public List<Timetable> getTimetablesByUserId(Long userId) {
-        return timetableRepository.findByUserId(userId);
+        return timetableRepository.findByUser_UserId(userId);
     }
 }

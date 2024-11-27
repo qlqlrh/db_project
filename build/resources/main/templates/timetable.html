@@ -7,8 +7,9 @@
 <h1>Create Timetable</h1>
 
 <form action="/timetable/create" method="post">
+    <!-- Day of Week -->
     <label for="dayOfWeek">Day of Week:</label>
-    <select name="dayOfWeek" required>
+    <select id="dayOfWeek" name="dayOfWeek" required>
         <option value="Monday">Monday</option>
         <option value="Tuesday">Tuesday</option>
         <option value="Wednesday">Wednesday</option>
@@ -18,12 +19,15 @@
         <option value="Sunday">Sunday</option>
     </select><br>
 
+    <!-- Start Time -->
     <label for="startTime">Start Time:</label>
-    <input type="time" name="startTime" required><br>
+    <input id="startTime" type="time" name="startTime" required><br>
 
+    <!-- End Time -->
     <label for="endTime">End Time:</label>
-    <input type="time" name="endTime" required><br>
+    <input id="endTime" type="time" name="endTime" required><br>
 
+    <!-- Submit Button -->
     <button type="submit">Save Timetable</button>
 </form>
 
