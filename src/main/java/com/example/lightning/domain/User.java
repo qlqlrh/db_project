@@ -1,69 +1,60 @@
 package com.example.lightning.domain;
 
-<<<<<<< HEAD
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Table(name = "users")
 @Getter
 @Setter
+@Table(
+        name = "users",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"email"}) // 이메일에 대해 UNIQUE 제약 조건 추가
+)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long userId;
 
-    @Column(nullable = false, length = 50)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(nullable = false, length = 50)
-    private String role;
+    @Column(name = "role", nullable = false, length = 50)
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
-    @Column(nullable = false, length = 30)
+    @Column(name = "password", nullable = false, length = 30)
     private String password;
-=======
-public class User {
-    private String name;
-    private String studentId;
-    private String role;
-    private String email;
 
-    // Getters and Setters
-    public String getName() {
-        return name;
+    // One-to-Many 관계로 Timetable 참조
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Timetable> timetables = new ArrayList<>();
+
+    // Default Constructor
+    public User() {
     }
 
-    public void setName(String name) {
+    // Constructor
+    public User(String name, Role role, String email, String password) {
         this.name = name;
-    }
-
-    public String getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(String studentId) {
-        this.studentId = studentId;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
         this.role = role;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
         this.email = email;
+        this.password = password;
     }
->>>>>>> a89d9c755d92be0f975b60d8f0343c3eea145979
+
+    // Enum for Role
+    public enum Role {
+        Freshman,
+        Senior_Student,
+        Professor,
+        Student_Council
+    }
 }

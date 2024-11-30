@@ -2,7 +2,7 @@ package com.example.lightning.controller;
 
 import com.example.lightning.domain.User;
 import com.example.lightning.service.UserService;
-<<<<<<< HEAD
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,11 +37,13 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String loginUser(@RequestParam("email") String email, @RequestParam("password") String password, Model model) {
+    public String loginUser(@RequestParam String email, @RequestParam String password, HttpSession session, Model model) {
         User user = userService.loginUser(email, password);
         if (user != null) {
-            model.addAttribute("name", user.getName());
-            return "welcome"; // 로그인 성공 시 웰컴 페이지
+            // 로그인 성공 시 세션에 userId 저장
+            session.setAttribute("userId", user.getUserId());
+            session.setAttribute("userName", user.getName()); // 사용자 이름 저장 (옵션)
+            return "redirect:/"; // 홈 페이지로 리다이렉트
         } else {
             model.addAttribute("error", "Invalid email or password!");
             return "login";
@@ -55,40 +57,13 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public String logout(Model model) {
-        model.addAttribute("message", "You have been logged out.");
-        return "login";
+    public String logout(HttpSession session) {
+        session.invalidate(); // 세션 무효화
+        return "redirect:/login";
     }
 
     @GetMapping("/home")
     public String homePage() {
         return "index"; // index.html 파일로 이동
-=======
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-
-@Controller
-public class UserController {
-    private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
-    @GetMapping("/mypage")
-    public String mypage(Model model) {
-        User user = userService.getUser();
-        model.addAttribute("user", user);
-        return "mypage";
-    }
-
-    @PostMapping("/mypage")
-    public String saveUser(@ModelAttribute User user) {
-        userService.saveUser(user);
-        return "redirect:/mypage";
->>>>>>> a89d9c755d92be0f975b60d8f0343c3eea145979
     }
 }
