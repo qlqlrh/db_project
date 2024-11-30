@@ -50,12 +50,6 @@ public class UserController {
         }
     }
 
-    @GetMapping("/welcome")
-    public String welcomePage(@RequestParam String name, Model model) {
-        model.addAttribute("name", name);
-        return "welcome";
-    }
-
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); // 세션 무효화
@@ -65,5 +59,22 @@ public class UserController {
     @GetMapping("/home")
     public String homePage() {
         return "index"; // index.html 파일로 이동
+    }
+
+    @GetMapping("/mypage")
+    public String myPage(HttpSession session, Model model) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return "redirect:/login"; // 로그인하지 않은 경우 login 페이지로 리다이렉트
+        }
+
+        // User 객체를 데이터베이스에서 가져오기
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            return "redirect:/login"; // 유효하지 않은 사용자라면 로그인 페이지로 이동
+        }
+
+        model.addAttribute("user", user); // User 객체를 모델에 추가
+        return "mypage"; // 로그인된 경우 mypage.html 렌더링
     }
 }
