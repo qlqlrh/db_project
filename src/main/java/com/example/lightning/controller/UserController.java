@@ -7,9 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class UserController {
@@ -43,9 +40,8 @@ public class UserController {
     public String loginUser(@RequestParam String email, @RequestParam String password, HttpSession session, Model model) {
         User user = userService.loginUser(email, password);
         if (user != null) {
-            // 로그인 성공 시 세션에 userId 저장
             session.setAttribute("userId", user.getUserId());
-            session.setAttribute("userName", user.getName()); // 사용자 이름 저장 (옵션)
+            session.setAttribute("userName", user.getName());
             return "redirect:/"; // 홈 페이지로 리다이렉트
         } else {
             model.addAttribute("error", "Invalid email or password!");
@@ -61,7 +57,7 @@ public class UserController {
 
     @GetMapping("/home")
     public String homePage() {
-        return "index"; // index.html 파일로 이동
+        return "index";
     }
 
     @GetMapping("/mypage")
@@ -80,4 +76,34 @@ public class UserController {
         model.addAttribute("user", user); // User 객체를 모델에 추가
         return "mypage"; // 로그인된 경우 mypage.html 렌더링
     }
+
+    @PostMapping("/mypage")
+    public String updateUser(@ModelAttribute User user, HttpSession session, Model model) {
+        Long userId = (Long) session.getAttribute("userId");
+
+        if (userId == null) {
+            return "redirect:/login"; // 로그인하지 않은 경우
+        }
+
+        // 세션에서 가져온 userId를 설정
+        user.setUserId(userId);
+
+        try {
+            User updatedUser = userService.updateUser(user); // 데이터베이스 업데이트
+            if(updatedUser.getName() != null) {updatedUser.getName();}
+            if(updatedUser.getEmail() != null) {updatedUser.getEmail();}
+            if(updatedUser.getRole() != null) {updatedUser.getRole();}
+            System.out.println(updatedUser.getName());
+            System.out.println(updatedUser.getEmail());
+            System.out.println(updatedUser.getRole());
+        } catch (Exception e) {
+            model.addAttribute("error", "Error updating profile!");
+            System.out.println(e.getMessage());
+        }
+
+        model.addAttribute("user", user); // 업데이트된 사용자 정보를 다시 모델에 추가
+        System.out.println("!!");
+        return "mypage"; // 수정 후 다시 마이페이지 렌더링
+    }
+
 }

@@ -24,7 +24,7 @@ public class User {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "role", nullable = false, length = 50)
+    @Column(name = "role", length = 50)
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -52,6 +52,7 @@ public class User {
 
     // Enum for Role
     public enum Role {
+        Select,
         Freshman,
         Senior_Student,
         Professor,

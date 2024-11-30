@@ -7,38 +7,35 @@
     <script>
         // Edit mode toggle
         function enableEdit() {
-            document.getElementById("userForm").querySelectorAll("input").forEach(input => input.disabled = false);
+            document.getElementById("userForm").querySelectorAll("input").forEach(input => input.readOnly = false);
+            document.getElementById("role").disabled = false; // 활성화
             document.getElementById("saveButton").style.display = "inline";
             document.getElementById("editButton").style.display = "none";
         }
 
-        // Disable inputs after save
         function disableEdit() {
-            document.getElementById("userForm").querySelectorAll("input").forEach(input => input.disabled = true);
-            document.getElementById("saveButton").style.display = "none";
-            document.getElementById("editButton").style.display = "inline";
+            document.getElementById("userForm").querySelectorAll("input").forEach(input => input.readOnly = true);
+            document.getElementById("role").disabled = true; // 저장 후 비활성화
         }
     </script>
+
 </head>
 <body>
 <h1>My Page</h1>
 <form id="userForm" action="/mypage" method="post">
     <label for="name">이름:</label>
-    <input type="text" id="name" name="name" value="ex.홍길동" disabled><br>
-
-    <label for="studentId">학번:</label>
-    <input type="text" id="studentId" name="studentId" value="ex.20xxxxxxx" disabled><br>
+    <input type="text" id="name" name="name" th:value="${user.name}" readonly><br>
 
     <label for="role">역할:</label>
-    <select id="role" name="role" required>
+    <select id="role" name="role" required readonly>
         <option value="Freshman" th:selected="${user.role == 'Freshman'}">Freshman</option>
         <option value="Senior Student" th:selected="${user.role == 'Senior Student'}">Senior Student</option>
         <option value="Professor" th:selected="${user.role == 'Professor'}">Professor</option>
         <option value="Student Council" th:selected="${user.role == 'Student Council'}">Student Council</option>
-    </select><br>
+    </select>
 
     <label for="email">이메일:</label>
-    <input type="email" id="email" name="email" value="xxx@pusan.ac.kr" disabled><br>
+    <input type="email" id="email" name="email" th:value="${user.email}" readonly><br>
 
     <!-- Buttons -->
     <button type="button" id="editButton" onclick="enableEdit()">수정하기</button>
