@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>모임등록</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    form {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+<h1>모임등록</h1>
+<form action="/meetings/register" method="POST">
+  <label for="location">장소:</label>
+  <input type="text" id="location" name="location" placeholder="장소를 입력하세요" required>
+  <br><br>
+
+  <label for="meetingDate">모임날짜:</label>
+  <input type="date" id="meetingDate" name="meetingDate" required>
+  <br><br>
+
+  <label for="startHour">시작시간:</label>
+  <select id="startHour" name="startHour" required>
+    <option value="">시</option>
+    <!-- 0시부터 23시까지 -->
+    <% for (int i = 0; i < 24; i++) { %>
+    <option value="<%= i %>"><%= String.format("%02d", i) %></option>
+    <% } %>
+  </select>
+
+  <select id="startMinute" name="startMinute" required>
+    <option value="">분</option>
+    <!-- 0분부터 59분까지 -->
+    <% for (int i = 0; i < 60; i++) { %>
+    <option value="<%= i %>"><%= String.format("%02d", i) %></option>
+    <% } %>
+  </select>
+  <br><br>
+
+  <label for="minParticipants">최소인원:</label>
+  <input type="number" id="minParticipants" name="minParticipants" min="1" required>
+  <br><br>
+
+  <label for="maxParticipants">최대인원:</label>
+  <input type="number" id="maxParticipants" name="maxParticipants" min="1" required>
+  <br><br>
+
+  <label for="organizer">모임장:</label>
+  <input type="text" id="organizer" name="organizer" value="${user.name}" readonly>
+  <br><br>
+
+  <button type="submit">모임등록</button>
+</form>
+</body>
+</html>
