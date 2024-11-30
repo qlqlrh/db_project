@@ -34,9 +34,21 @@ public class User {
     @Column(name = "password", nullable = false, length = 30)
     private String password;
 
-    // One-to-Many 관계로 Timetable 참조
+    // One-to-Many 관계로 timetable 참조
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Timetable> timetables = new ArrayList<>();
+
+    // One-to-Many 관계로 meeting 참조
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Meeting> meetings = new ArrayList<>();
+
+    // One-to-Many 관계로 enrollment 참조
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Enrollment> enrollments = new ArrayList<>();
+
+    // One-to-Many 관계로 review 참조
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
 
     // Default Constructor
     public User() {
