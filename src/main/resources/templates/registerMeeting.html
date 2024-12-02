@@ -7,23 +7,41 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #4CAF50;
     }
 
     form {
       max-width: 400px;
-      margin: 0 auto;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     label {
       display: block;
       margin-bottom: 8px;
+      font-weight: bold;
     }
 
     input, select, button {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    input:read-only {
+      background-color: #f5f5f5;
     }
 
     button {
@@ -31,53 +49,54 @@
       color: white;
       border: none;
       cursor: pointer;
+      font-size: 16px;
     }
 
     button:hover {
       background-color: #45a049;
     }
+
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
 <h1>모임등록</h1>
-<form action="/meetings/register" method="POST">
+<form th:action="@{/meetings/register}" method="POST">
+  <!-- Error message display -->
+  <div th:if="${error}" class="error" th:text="${error}"></div>
+
   <label for="location">장소:</label>
   <input type="text" id="location" name="location" placeholder="장소를 입력하세요" required>
-  <br><br>
 
-  <label for="meetingDate">모임날짜:</label>
+  <label for="meetingDate">모임 날짜:</label>
   <input type="date" id="meetingDate" name="meetingDate" required>
-  <br><br>
 
-  <label for="startHour">시작시간:</label>
+  <label for="startTime">시작 시간:</label>
   <select id="startHour" name="startHour" required>
-    <option value="">시</option>
-    <!-- 0시부터 23시까지 -->
-    <% for (int i = 0; i < 24; i++) { %>
-    <option value="<%= i %>"><%= String.format("%02d", i) %></option>
-    <% } %>
+    <option value="" disabled selected>시</option>
+    <th:block th:each="hour : ${#numbers.sequence(0, 23)}">
+      <option th:value="${hour}" th:text="${hour < 10 ? '0' + hour : hour}"></option>
+    </th:block>
   </select>
-
   <select id="startMinute" name="startMinute" required>
-    <option value="">분</option>
-    <!-- 0분부터 59분까지 -->
-    <% for (int i = 0; i < 60; i++) { %>
-    <option value="<%= i %>"><%= String.format("%02d", i) %></option>
-    <% } %>
+    <option value="" disabled selected>분</option>
+    <th:block th:each="minute : ${#numbers.sequence(0, 59)}">
+      <option th:value="${minute}" th:text="${minute < 10 ? '0' + minute : minute}"></option>
+    </th:block>
   </select>
-  <br><br>
 
-  <label for="minParticipants">최소인원:</label>
+  <label for="minParticipants">최소 인원:</label>
   <input type="number" id="minParticipants" name="minParticipants" min="1" required>
-  <br><br>
 
-  <label for="maxParticipants">최대인원:</label>
+  <label for="maxParticipants">최대 인원:</label>
   <input type="number" id="maxParticipants" name="maxParticipants" min="1" required>
-  <br><br>
 
   <label for="organizer">모임장:</label>
-  <input type="text" id="organizer" name="organizer" value="${user.name}" readonly>
-  <br><br>
+  <input type="text" id="organizer" name="organizer" th:value="${user.name}" readonly>
 
   <button type="submit">모임등록</button>
 </form>

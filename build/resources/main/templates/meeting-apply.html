@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Application</title>
+    <style>
+        /* Global styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+
+        td {
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        button {
+            padding: 8px 15px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .message.error {
+            background-color: #ffdddd;
+            color: #d8000c;
+        }
+
+        .message.success {
+            background-color: #ddffdd;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Available Meetings</h1>
+</header>
+<main>
+    <!-- Error and Success Messages -->
+    <div th:if="${error}" class="message error" th:text="${error}"></div>
+    <div th:if="${message}" class="message success" th:text="${message}"></div>
+
+    <!-- Meetings Table -->
+    <table>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Space</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Participants</th>
+            <th>Max Participants</th>
+            <th>Target</th>
+            <th>Host</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="meeting : ${meetings}">
+            <td th:text="${meeting.title}"></td>
+            <td th:text="${meeting.space}"></td>
+            <td th:text="${meeting.date}"></td>
+            <td th:text="${meeting.time}"></td>
+            <td th:text="${meeting.participantCount}"></td>
+            <td th:text="${meeting.maxParticipants}"></td>
+            <td th:text="${meeting.createdFor}"></td>
+            <td th:text="${meeting.user.name + ' (' + meeting.createdByRole + ')'}"></td>
+            <td>
+                <form th:action="@{/meetings/apply/{id}(id=${meeting.meetingId})}" method="post">
+                    <button type="submit">Apply</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

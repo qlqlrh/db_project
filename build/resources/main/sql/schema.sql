@@ -1,9 +1,9 @@
 -- DROP TABLES IF EXISTS
 DROP TABLE IF EXISTS "users" CASCADE;
-DROP TABLE IF EXISTS "Meeting" CASCADE;
-DROP TABLE IF EXISTS "Enrollment" CASCADE;
-DROP TABLE IF EXISTS "Review" CASCADE;
-DROP TABLE IF EXISTS "Timetable" CASCADE;
+DROP TABLE IF EXISTS "meeting" CASCADE;
+DROP TABLE IF EXISTS "enrollment" CASCADE;
+DROP TABLE IF EXISTS "review" CASCADE;
+DROP TABLE IF EXISTS "timetable" CASCADE;
 
 -- CREATE TABLE Users
 CREATE TABLE "users" (
@@ -14,8 +14,8 @@ CREATE TABLE "users" (
                          "password" VARCHAR(30) NOT NULL
 );
 
--- CREATE TABLE Meeting
-CREATE TABLE "Meeting" (
+-- CREATE TABLE meeting
+CREATE TABLE "meeting" (
                            "meeting_id" SERIAL PRIMARY KEY,
                            "user_id" INT NOT NULL,
                            "title" VARCHAR(100) NOT NULL,
@@ -29,30 +29,30 @@ CREATE TABLE "Meeting" (
                            CONSTRAINT "FK_MEETING_USER" FOREIGN KEY ("user_id") REFERENCES "users" ("user_id") ON DELETE CASCADE
 );
 
--- CREATE TABLE Enrollment
-CREATE TABLE "Enrollment" (
+-- CREATE TABLE enrollment
+CREATE TABLE "enrollment" (
                               "enrollment_id" SERIAL PRIMARY KEY,
                               "user_id" INT NOT NULL,
                               "meeting_id" INT NOT NULL,
                               "enrollment_date" DATE NOT NULL,
                               CONSTRAINT "FK_ENROLLMENT_USER" FOREIGN KEY ("user_id") REFERENCES "users" ("user_id") ON DELETE CASCADE,
-                              CONSTRAINT "FK_ENROLLMENT_MEETING" FOREIGN KEY ("meeting_id") REFERENCES "Meeting" ("meeting_id") ON DELETE CASCADE
+                              CONSTRAINT "FK_ENROLLMENT_MEETING" FOREIGN KEY ("meeting_id") REFERENCES "meeting" ("meeting_id") ON DELETE CASCADE
 );
 
--- CREATE TABLE Review
-CREATE TABLE "Review" (
+-- CREATE TABLE review
+CREATE TABLE "review" (
                           "review_id" SERIAL PRIMARY KEY,
                           "meeting_id" INT NOT NULL,
                           "user_id" INT NOT NULL,
                           "rating" INT CHECK ("rating" BETWEEN 1 AND 5) NOT NULL,
                           "comment" TEXT NOT NULL,
                           "created_at" TIMESTAMP NOT NULL,
-                          CONSTRAINT "FK_REVIEW_MEETING" FOREIGN KEY ("meeting_id") REFERENCES "Meeting" ("meeting_id") ON DELETE CASCADE,
+                          CONSTRAINT "FK_REVIEW_MEETING" FOREIGN KEY ("meeting_id") REFERENCES "meeting" ("meeting_id") ON DELETE CASCADE,
                           CONSTRAINT "FK_REVIEW_USER" FOREIGN KEY ("user_id") REFERENCES "users" ("user_id") ON DELETE CASCADE
 );
 
--- CREATE TABLE Timetable
-CREATE TABLE "Timetable" (
+-- CREATE TABLE timetable
+CREATE TABLE "timetable" (
                              "timetable_id" SERIAL PRIMARY KEY,
                              "user_id" INT NOT NULL,
                              "day_of_week" VARCHAR(50) CHECK ("day_of_week" IN ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')) NULL,
