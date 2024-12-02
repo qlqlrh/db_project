@@ -27,10 +27,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-<<<<<<< HEAD
-=======
-	//implementation 'org.springframework.boot:spring-boot-starter-security'
->>>>>>> 7709103e4b1c73048aefc8b07d9821ae2f217d49
 
 	// https://mvnrepository.com/artifact/org.postgresql/postgresql
 	implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'

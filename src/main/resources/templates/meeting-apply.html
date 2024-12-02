@@ -4,6 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meeting Application</title>
+    <script>
+        // 페이지 로드 시 URL 쿼리 파라미터를 읽어서 alert 메시지 표시
+        window.onload = function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get("error");
+            const success = urlParams.get("success");
+
+            if (error === "duplicate") {
+                alert("You have already applied for this meeting.");
+            } else if (error === "conflict") {
+                alert("The meeting conflicts with your timetable.");
+            } else if (error === "full") {
+                alert("The meeting is already full.");
+            } else if (success === "true") {
+                alert("Successfully applied for the meeting!");
+            }
+        };
+    </script>
     <style>
         /* Global styles */
         body {

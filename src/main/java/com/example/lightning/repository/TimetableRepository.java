@@ -12,6 +12,6 @@ public interface TimetableRepository extends JpaRepository<Timetable, Long> {
 
     // 해당 유저의 시간표가 존재 여부와 특정 시간과의 일치 여부 확인
     boolean existsByUser_UserIdAndDayOfWeekAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
-            Long userId, String dayOfWeek, LocalTime startTime, LocalTime endTime
+            Long userId, Timetable.DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime
     );
 }
