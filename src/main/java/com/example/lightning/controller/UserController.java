@@ -104,7 +104,6 @@ public class UserController {
         }
 
         model.addAttribute("user", user); // 업데이트된 사용자 정보를 다시 모델에 추가
-        System.out.println("!!");
         return "mypage"; // 수정 후 다시 마이페이지 렌더링
     }
 

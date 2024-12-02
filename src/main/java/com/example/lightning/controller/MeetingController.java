@@ -20,7 +20,7 @@ public class MeetingController {
         // 사용자의 이름을 기본 모임장으로 설정
         User currentUser = getCurrentUser(); // 현재 로그인한 사용자 정보 가져오기
         model.addAttribute("user", currentUser);
-        return "registerMeeting";
+        return "register-meeting";
     }
 
     @PostMapping("/register")
@@ -31,7 +31,7 @@ public class MeetingController {
             return "redirect:/meetings/list";
         } catch (Exception e) {
             model.addAttribute("error", "모임 등록 중 오류가 발생했습니다: " + e.getMessage());
-            return "registerMeeting";
+            return "register-meeting";
         }
     }
 
@@ -39,4 +39,6 @@ public class MeetingController {
         // 현재 로그인한 사용자를 반환하는 메서드 (임시 구현)
         return new User("Default User", User.Role.Freshman, "default@example.com", "aaaaaa");
     }
+
+
 }

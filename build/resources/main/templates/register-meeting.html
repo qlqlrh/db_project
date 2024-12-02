@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,18 +52,16 @@
   <label for="startHour">시작시간:</label>
   <select id="startHour" name="startHour" required>
     <option value="">시</option>
-    <!-- 0시부터 23시까지 -->
-    <% for (int i = 0; i < 24; i++) { %>
-    <option value="<%= i %>"><%= String.format("%02d", i) %></option>
-    <% } %>
+    <th:block th:each="i : ${#numbers.sequence(0, 23)}">
+      <option th:value="${i}" th:text="${i < 10 ? '0' + i : i}"></option>
+    </th:block>
   </select>
 
   <select id="startMinute" name="startMinute" required>
     <option value="">분</option>
-    <!-- 0분부터 59분까지 -->
-    <% for (int i = 0; i < 60; i++) { %>
-    <option value="<%= i %>"><%= String.format("%02d", i) %></option>
-    <% } %>
+    <th:block th:each="i : ${#numbers.sequence(0, 59)}">
+      <option th:value="${i}" th:text="${i < 10 ? '0' + i : i}"></option>
+    </th:block>
   </select>
   <br><br>
 
@@ -76,7 +74,7 @@
   <br><br>
 
   <label for="organizer">모임장:</label>
-  <input type="text" id="organizer" name="organizer" value="${user.name}" readonly>
+  <input type="text" id="organizer" name="organizer" th:value="${user.name}" readonly>
   <br><br>
 
   <button type="submit">모임등록</button>
