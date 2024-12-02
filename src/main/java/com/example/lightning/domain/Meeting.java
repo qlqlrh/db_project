@@ -46,7 +46,7 @@ public class Meeting {
     private String createdFor;
 
     @Column(name = "created_by_role", nullable = false, length = 50)
-    private String createdByRole;
+    private String createdByRole = "USER"; // 기본값 설정
 
     @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Enrollment> enrollments = new ArrayList<>();

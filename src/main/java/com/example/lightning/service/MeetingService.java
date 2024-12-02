@@ -2,6 +2,7 @@ package com.example.lightning.service;
 
 import com.example.lightning.domain.Meeting;
 import com.example.lightning.repository.MeetingRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,4 +29,5 @@ public class MeetingService {
     public void saveMeeting(Meeting meeting) {
         meetingRepository.save(meeting);
     }
+
 }
