@@ -28,6 +28,7 @@ public class UserService {
         return null;
     }
 
+
     @Transactional
     public User updateUser(User user) {
         // 기존 사용자 데이터를 데이터베이스에서 조회
