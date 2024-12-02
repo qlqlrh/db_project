@@ -62,11 +62,30 @@
       margin-bottom: 10px;
     }
   </style>
+  <script>
+    function validateForm() {
+      const minParticipants = parseInt(document.getElementById('minParticipants').value);
+      const maxParticipants = parseInt(document.getElementById('maxParticipants').value);
+
+      if (minParticipants >= maxParticipants) {
+        alert('최소 인원이 최대 인원보다 클 수 없습니다.');
+        return false; // 폼 제출 방지
+      }
+
+      return true; // 폼 제출 허용
+    }
+
+    // 오늘 날짜를 min 속성에 설정
+    window.onload = function() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('meetingDate').setAttribute('min', today);
+    };
+  </script>
 </head>
 <body>
 
 <h1>모임등록</h1>
-<form th:action="@{/meetings/register}" method="POST">
+<form th:action="@{/meetings/register}" method="POST" onsubmit="return validateForm()">
   <!-- Error message display -->
   <div th:if="${error}" class="error" th:text="${error}"></div>
 
