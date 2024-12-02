@@ -33,10 +33,18 @@ public class MeetingController {
     private UserService userService;
 
     @GetMapping("/register")
-    public String registerMeetingPage(Model model) {
-        // 사용자의 이름을 기본 모임장으로 설정
-        User currentUser = getCurrentUser(); // 현재 로그인한 사용자 정보 가져오기
-        model.addAttribute("user", currentUser);
+    public String registerMeetingPage(HttpSession session, Model model) {
+        // 세션에서 userId 확인
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            model.addAttribute("error", "로그인이 필요합니다."); // 에러 메시지 추가
+            return "login"; // 로그인 페이지로 이동
+        }
+
+        // 로그인한 사용자 정보 가져오기
+        User user = userService.getUserById(userId); // 서비스로 사용자 정보 조회
+        model.addAttribute("user", user);
+
         return "registerMeeting";
     }
 
@@ -50,11 +58,6 @@ public class MeetingController {
             model.addAttribute("error", "모임 등록 중 오류가 발생했습니다: " + e.getMessage());
             return "registerMeeting";
         }
-    }
-
-    private User getCurrentUser() {
-        // 현재 로그인한 사용자를 반환하는 메서드 (임시 구현)
-        return new User("Default User", User.Role.Freshman, "default@example.com", "aaaaaa");
     }
 
     // 모임 신청 페이지

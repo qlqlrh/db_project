@@ -1,6 +1,8 @@
 package com.example.lightning.controller;
 
+import com.example.lightning.domain.Timetable;
 import com.example.lightning.domain.User;
+import com.example.lightning.service.TimetableService;
 import com.example.lightning.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +10,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private TimetableService timetableService;
 
     @GetMapping("/signup")
     public String signupPage() {
@@ -69,13 +76,11 @@ public class UserController {
 
         // User 객체를 데이터베이스에서 가져오기
         User user = userService.getUserById(userId);
-        if (user == null) {
-            return "redirect:/login"; // 유효하지 않은 사용자라면 로그인 페이지로 이동
-        }
-        // Print the value of user.role to the console for debugging
-        System.out.println("User role: " + user.getRole());
+        List<Timetable> timetables = timetableService.getTimetablesByUserId(userId);
 
         model.addAttribute("user", user); // User 객체를 모델에 추가
+        model.addAttribute("timetables", timetables);
+
         return "mypage"; // 로그인된 경우 mypage.html 렌더링
     }
 
@@ -107,5 +112,4 @@ public class UserController {
         System.out.println("!!");
         return "mypage"; // 수정 후 다시 마이페이지 렌더링
     }
-
 }
