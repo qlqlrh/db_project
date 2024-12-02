@@ -139,6 +139,11 @@ public class MeetingController {
             return "redirect:/meetings/apply?error=invalid";
         }
 
+        // 모임장이 자신이 만든 모임에 신청하려는 경우 제한
+        if (meeting.getUser().getUserId().equals(userId)) {
+            return "redirect:/meetings/apply?error=creator";
+        }
+
         // Professor 예외 처리 (Professor는 모든 모임 신청 가능)
         if (!user.getRole().equals(User.Role.Professor)) {
             // 모임 대상 검증

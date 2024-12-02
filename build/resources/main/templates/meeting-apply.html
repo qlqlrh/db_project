@@ -28,6 +28,9 @@
                     case "invalid":
                         alert("유효하지 않은 모임 또는 사용자입니다.");
                         break;
+                    case "creator":
+                        alert("자신이 만든 모임에는 신청할 수 없습니다. 다른 모임을 신청해주세요!");
+                        break;
                     default:
                         alert("An unknown error occurred. Please try again.");
                 }
