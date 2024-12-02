@@ -53,20 +53,4 @@ public class Meeting {
 
     @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
-<<<<<<< HEAD
-
-//    @Override
-//    public String toString() {
-//        return "Meeting{" +
-//                "location='" + location + '\'' +
-//                ", meetingDate='" + meetingDate + '\'' +
-//                ", startHour=" + startHour +
-//                ", startMinute=" + startMinute +
-//                ", minParticipants=" + minParticipants +
-//                ", maxParticipants=" + maxParticipants +
-//                ", organizer='" + organizer + '\'' +
-//                '}';
-//    }
-=======
->>>>>>> bf0cdb8f096eec57bd2aa15fc86838d290fecb52
 }
