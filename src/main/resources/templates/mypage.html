@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Page</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f5f5f5;
+        }
+    </style>
     <script>
         // Edit mode toggle
         function enableEdit() {
@@ -24,6 +41,8 @@
 </head>
 <body>
 <h1>My Page</h1>
+
+<!-- User Information -->
 <form id="userForm" action="/mypage" method="post" th:object="${user}">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" th:field="*{name}" readonly><br>
@@ -45,5 +64,25 @@
     <button type="submit" id="saveButton" style="display: none;" onclick="disableEdit()">Save</button>
     <button type="button" onclick="history.back()">Back</button>
 </form>
+
+<!-- Timetable Section -->
+<h2>Your Timetable</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Day</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="timetable : ${timetables}">
+        <td th:text="${timetable.dayOfWeek}"></td>
+        <td th:text="${timetable.startTime}"></td>
+        <td th:text="${timetable.endTime}"></td>
+    </tr>
+    </tbody>
+</table>
+
 </body>
 </html>
