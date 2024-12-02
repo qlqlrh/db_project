@@ -14,8 +14,7 @@ public class MeetingService {
     private MeetingRepository meetingRepository;
 
     public void registerMeeting(Meeting meeting) {
-        // 모임 등록 로직 구현 (DB에 저장)
-        System.out.println("모임 등록: " + meeting.toString());
+        meetingRepository.save(meeting); // Save the meeting to the database
     }
 
     public List<Meeting> getAllMeetings() {

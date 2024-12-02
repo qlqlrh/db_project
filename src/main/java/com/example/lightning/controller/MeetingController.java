@@ -34,15 +34,21 @@ public class MeetingController {
 
     @GetMapping("/register")
     public String registerMeetingPage(Model model) {
-        // 사용자의 이름을 기본 모임장으로 설정
-        User currentUser = getCurrentUser(); // 현재 로그인한 사용자 정보 가져오기
+        User currentUser = getCurrentUser();
         model.addAttribute("user", currentUser);
+        model.addAttribute("meeting", new Meeting());
         return "registerMeeting";
     }
 
     @PostMapping("/register")
-    public String registerMeeting(@ModelAttribute Meeting meeting, Model model) {
+    public String registerMeeting(@ModelAttribute Meeting meeting, HttpSession session, Model model) {
         try {
+            Long userId = (Long) session.getAttribute("userId");
+            if (userId == null) {
+                return "redirect:/login";
+            }
+            User currentUser = userService.getUserById(userId);
+            meeting.setUser(currentUser);
             meetingService.registerMeeting(meeting);
             model.addAttribute("message", "모임이 성공적으로 등록되었습니다!");
             return "redirect:/meetings/list";
