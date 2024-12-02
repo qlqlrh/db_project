@@ -72,6 +72,8 @@ public class UserController {
         if (user == null) {
             return "redirect:/login"; // 유효하지 않은 사용자라면 로그인 페이지로 이동
         }
+        // Print the value of user.role to the console for debugging
+        System.out.println("User role: " + user.getRole());
 
         model.addAttribute("user", user); // User 객체를 모델에 추가
         return "mypage"; // 로그인된 경우 mypage.html 렌더링

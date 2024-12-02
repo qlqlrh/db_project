@@ -1,6 +1,5 @@
 package com.example.lightning.domain;
 
-<<<<<<< HEAD
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -54,29 +53,4 @@ public class Meeting {
 
     @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
-=======
-public class Meeting {
-    private String location;
-    private String meetingDate;
-    private int startHour;
-    private int startMinute;
-    private int minParticipants;
-    private int maxParticipants;
-    private String organizer;
-
-    // Getters and Setters
-
-    @Override
-    public String toString() {
-        return "Meeting{" +
-                "location='" + location + '\'' +
-                ", meetingDate='" + meetingDate + '\'' +
-                ", startHour=" + startHour +
-                ", startMinute=" + startMinute +
-                ", minParticipants=" + minParticipants +
-                ", maxParticipants=" + maxParticipants +
-                ", organizer='" + organizer + '\'' +
-                '}';
-    }
->>>>>>> b27351f75c7b0a3f854cef4282c25dfb0eb53fa8
 }
