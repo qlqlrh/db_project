@@ -26,6 +26,20 @@ public class UserController {
     @Autowired
     private EnrollmentService enrollmentService;
 
+    @GetMapping("/")
+    public String home(HttpSession session, Model model) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId != null) {
+            User user = userService.getUserById(userId);
+            model.addAttribute("isLoggedIn", true);
+            model.addAttribute("userName", user.getName());
+        } else {
+            model.addAttribute("isLoggedIn", false);
+        }
+        return "index"; // HTML 파일 이름
+    }
+
+
     @GetMapping("/signup")
     public String signupPage() {
         return "signup";
@@ -64,7 +78,7 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); // 세션 무효화
-        return "redirect:/login";
+        return "redirect:/";
     }
 
     @GetMapping("/home")
