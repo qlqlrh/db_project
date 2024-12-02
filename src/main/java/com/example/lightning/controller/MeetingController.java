@@ -94,7 +94,7 @@ public class MeetingController {
             meetingService.registerMeeting(meeting);
 
             model.addAttribute("message", "모임이 성공적으로 등록되었습니다!");
-            return "redirect:/meetings/list";
+            return "redirect:/meetings/apply";
         } catch (Exception e) {
             model.addAttribute("error", "모임 등록 중 오류가 발생했습니다: " + e.getMessage());
             return "registerMeeting";
