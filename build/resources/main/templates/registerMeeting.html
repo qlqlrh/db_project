@@ -99,6 +99,15 @@
   <label for="maxParticipants">최대 인원:</label>
   <input type="number" id="maxParticipants" name="maxParticipants" min="1" required>
 
+  <label for="createFor">대상 그룹:</label>
+  <select id="createFor" name="createFor" required>
+    <option value="" disabled selected>대상 그룹 선택</option>
+    <option value="Freshman">Freshman</option>
+    <option value="Senior_Student">Senior Student</option>
+    <option value="Professor">Professor</option>
+    <option value="Student_Council">Student Council</option>
+  </select>
+
   <label for="organizer">모임장:</label>
   <input
           type="text"

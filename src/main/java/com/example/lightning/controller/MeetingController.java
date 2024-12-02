@@ -62,6 +62,8 @@ public class MeetingController {
             @RequestParam("startHour") int startHour,
             @RequestParam("startMinute") int startMinute,
             @RequestParam("maxParticipants") int maxParticipants,
+            @RequestParam("organizer") String organizer,
+            @RequestParam("createFor") String createFor,
             HttpSession session,
             Model model) {
         try {
@@ -80,13 +82,13 @@ public class MeetingController {
 
             // Meeting 객체 생성 및 값 설정
             Meeting meeting = new Meeting();
-            //meeting.setUser(currentUser);
+            meeting.setUser(currentUser);
             meeting.setTitle(title);
             meeting.setSpace(location);
             meeting.setDate(LocalDate.parse(meetingDate));
             meeting.setTime(LocalTime.of(startHour, startMinute));
             meeting.setMaxParticipants(maxParticipants);
-            //meeting.setUser(currentUser);
+            meeting.setCreatedFor(createFor);
 
             // 중요: createdByRole 필드 설정
             meeting.setCreatedByRole(currentUser.getRole().name()); // 사용자 역할 기반 설정
@@ -134,7 +136,6 @@ public class MeetingController {
             return "redirect:/meetings/apply";
         }
 
-<<<<<<< HEAD
         // 모임 날짜로부터 요일 가져오기
         String dayOfWeekString = meeting.getDate().getDayOfWeek().toString();
 
@@ -152,23 +153,12 @@ public class MeetingController {
         if (timetableService.isConflictWithTimetable(userId, dayOfWeekString, startTime, endTime)) {
             model.addAttribute("error", "The meeting conflicts with your timetable.");
             return "redirect:/meetings/apply?error=conflict";
-=======
-        // 시간표 충돌 확인
-        if (timetableService.isConflictWithTimetable(userId, meeting.getDate(), meeting.getTime())) {
-            model.addAttribute("error", "모임 시간이 기존 시간표와 충돌합니다.");
-            return "redirect:/meetings/apply";
->>>>>>> 1ef39ee11e587e2548601bcd9518b5ebc20a6ba3
         }
 
         // 최대 인원 초과 확인
         if (meeting.getParticipantCount() >= meeting.getMaxParticipants()) {
-<<<<<<< HEAD
             model.addAttribute("error", "The meeting is already full.");
             return "redirect:/meetings/apply?error=full";
-=======
-            model.addAttribute("error", "모임 정원이 초과되었습니다.");
-            return "redirect:/meetings/apply";
->>>>>>> 1ef39ee11e587e2548601bcd9518b5ebc20a6ba3
         }
 
         // 모임 신청 처리
@@ -182,15 +172,7 @@ public class MeetingController {
         meeting.setParticipantCount(meeting.getParticipantCount() + 1);
         meetingService.saveMeeting(meeting);
 
-<<<<<<< HEAD
-        model.addAttribute("message", "Successfully applied for the meeting!");
+        model.addAttribute("message", "모임 신청이 성공적으로 완료되었습니다!");
         return "redirect:/meetings/apply?success=true";
     }
-
-
-=======
-        model.addAttribute("message", "모임 신청이 성공적으로 완료되었습니다!");
-        return "redirect:/meetings/apply";
-    }
->>>>>>> 1ef39ee11e587e2548601bcd9518b5ebc20a6ba3
 }
