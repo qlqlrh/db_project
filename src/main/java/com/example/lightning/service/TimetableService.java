@@ -16,10 +16,12 @@ public class TimetableService {
     private TimetableRepository timetableRepository;
 
     public Timetable saveTimetable(Timetable timetable) {
+
         return timetableRepository.save(timetable);
     }
 
     public List<Timetable> getTimetablesByUserId(Long userId) {
+
         return timetableRepository.findByUser_UserId(userId);
     }
 
