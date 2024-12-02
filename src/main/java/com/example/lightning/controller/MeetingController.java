@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -61,6 +62,8 @@ public class MeetingController {
             @RequestParam("startHour") int startHour,
             @RequestParam("startMinute") int startMinute,
             @RequestParam("maxParticipants") int maxParticipants,
+            @RequestParam("organizer") String organizer,
+            @RequestParam("createFor") String createFor,
             HttpSession session,
             Model model) {
         try {
@@ -79,13 +82,13 @@ public class MeetingController {
 
             // Meeting 객체 생성 및 값 설정
             Meeting meeting = new Meeting();
-            //meeting.setUser(currentUser);
+            meeting.setUser(currentUser);
             meeting.setTitle(title);
             meeting.setSpace(location);
             meeting.setDate(LocalDate.parse(meetingDate));
             meeting.setTime(LocalTime.of(startHour, startMinute));
             meeting.setMaxParticipants(maxParticipants);
-            //meeting.setUser(currentUser);
+            meeting.setCreatedFor(createFor);
 
             // 중요: createdByRole 필드 설정
             meeting.setCreatedByRole(currentUser.getRole().name()); // 사용자 역할 기반 설정
@@ -117,11 +120,14 @@ public class MeetingController {
     // 모임 신청 처리
     @PostMapping("/apply/{meetingId}")
     public String applyForMeeting(@PathVariable Long meetingId, HttpSession session, Model model) {
+        // 세션에서 userId 가져오기
         Long userId = (Long) session.getAttribute("userId");
         if (userId == null) {
+            model.addAttribute("error", "Please log in to apply for a meeting.");
             return "redirect:/login";
         }
 
+        // 사용자와 모임 정보 가져오기
         User user = userService.getUserById(userId);
         Meeting meeting = meetingService.getMeetingById(meetingId);
 
@@ -130,16 +136,29 @@ public class MeetingController {
             return "redirect:/meetings/apply";
         }
 
+        // 모임 날짜로부터 요일 가져오기
+        String dayOfWeekString = meeting.getDate().getDayOfWeek().toString();
+
+        // 모임 시작 시간 가져오기
+        LocalTime startTime = meeting.getTime();
+        LocalTime endTime = startTime.plusHours(2); // 예시: 모임이 2시간이라고 가정
+
+        // 중복 신청 확인
+        if (enrollmentService.existsByUserAndMeeting(user, meeting)) {
+            model.addAttribute("error", "You have already applied for this meeting.");
+            return "redirect:/meetings/apply?error=duplicate";
+        }
+
         // 시간표 충돌 확인
-        if (timetableService.isConflictWithTimetable(userId, meeting.getDate(), meeting.getTime())) {
-            model.addAttribute("error", "모임 시간이 기존 시간표와 충돌합니다.");
-            return "redirect:/meetings/apply";
+        if (timetableService.isConflictWithTimetable(userId, dayOfWeekString, startTime, endTime)) {
+            model.addAttribute("error", "The meeting conflicts with your timetable.");
+            return "redirect:/meetings/apply?error=conflict";
         }
 
         // 최대 인원 초과 확인
         if (meeting.getParticipantCount() >= meeting.getMaxParticipants()) {
-            model.addAttribute("error", "모임 정원이 초과되었습니다.");
-            return "redirect:/meetings/apply";
+            model.addAttribute("error", "The meeting is already full.");
+            return "redirect:/meetings/apply?error=full";
         }
 
         // 모임 신청 처리
@@ -147,12 +166,13 @@ public class MeetingController {
         enrollment.setUser(user);
         enrollment.setMeeting(meeting);
         enrollment.setEnrollmentDate(LocalDate.now());
-
         enrollmentService.saveEnrollment(enrollment);
+
+        // 참가자 수 증가
         meeting.setParticipantCount(meeting.getParticipantCount() + 1);
         meetingService.saveMeeting(meeting);
 
         model.addAttribute("message", "모임 신청이 성공적으로 완료되었습니다!");
-        return "redirect:/meetings/apply";
+        return "redirect:/meetings/apply?success=true";
     }
 }

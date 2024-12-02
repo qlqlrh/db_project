@@ -26,9 +26,14 @@ public class TimetableService {
     }
 
     // 시간표와 중복되는 모임인지 체크
-    public boolean isConflictWithTimetable(Long userId, LocalDate date, LocalTime time) {
+    public boolean isConflictWithTimetable(Long userId, String dayOfWeekString, LocalTime startTime, LocalTime endTime) {
+
+        // String 값을 Enum으로 변환
+        Timetable.DayOfWeek dayOfWeek = Timetable.DayOfWeek.valueOf(dayOfWeekString.toUpperCase());
+
+        // Repository 호출 시 Enum 값 사용
         return timetableRepository.existsByUser_UserIdAndDayOfWeekAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
-                userId, date.getDayOfWeek().toString(), time, time
+                userId, dayOfWeek, startTime, endTime
         );
     }
 }

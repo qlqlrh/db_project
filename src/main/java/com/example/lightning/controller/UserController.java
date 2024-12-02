@@ -1,7 +1,9 @@
 package com.example.lightning.controller;
 
+import com.example.lightning.domain.Meeting;
 import com.example.lightning.domain.Timetable;
 import com.example.lightning.domain.User;
+import com.example.lightning.service.EnrollmentService;
 import com.example.lightning.service.TimetableService;
 import com.example.lightning.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -20,6 +22,9 @@ public class UserController {
 
     @Autowired
     private TimetableService timetableService;
+
+    @Autowired
+    private EnrollmentService enrollmentService;
 
     @GetMapping("/signup")
     public String signupPage() {
@@ -76,10 +81,15 @@ public class UserController {
 
         // User 객체를 데이터베이스에서 가져오기
         User user = userService.getUserById(userId);
-        List<Timetable> timetables = timetableService.getTimetablesByUserId(userId);
-
         model.addAttribute("user", user); // User 객체를 모델에 추가
+
+        // 시간표 가져오기
+        List<Timetable> timetables = timetableService.getTimetablesByUserId(userId);
         model.addAttribute("timetables", timetables);
+
+        // 신청한 모임 정보 가져오기
+        List<Meeting> enrolledMeetings = enrollmentService.getMeetingsByUserId(userId);
+        model.addAttribute("enrolledMeetings", enrolledMeetings);
 
         return "mypage"; // 로그인된 경우 mypage.html 렌더링
     }
