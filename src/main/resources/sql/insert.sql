@@ -23,11 +23,11 @@ VALUES
     (1, 3, '2024-11-22'); -- Alice (Freshman) 다른 모임 참여
 
 -- INSERT INTO Review
-INSERT INTO "review" ("meeting_id", "user_id", "rating", "comment", "created_at")
+INSERT INTO "review" ("meeting_id", "user_id", "rating", "comment", "created_at", "is_completed")
 VALUES
-    (1, 1, 5, 'Great orientation program!', '2024-12-02 12:00:00'),
-    (1, 3, 4, 'Very informative and helpful.', '2024-12-02 14:00:00'),
-    (3, 1, 3, 'The meeting was okay but could be better.', '2024-12-04 16:00:00');
+    (1, 1, 5, 'Great orientation program!', '2024-12-02 12:00:00', true),
+    (1, 3, 4, 'Very informative and helpful.', '2024-12-02 14:00:00', false),
+    (3, 1, 3, 'The meeting was okay but could be better.', '2024-12-04 16:00:00', true);
 
 -- INSERT INTO Timetable
 INSERT INTO "timetable" ("user_id", "day_of_week", "start_time", "end_time")

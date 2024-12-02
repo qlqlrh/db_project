@@ -33,4 +33,21 @@ public class Review {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    // 추가
+    @Column(name = "is_completed", nullable = false)
+    private boolean isCompleted = false; // 모임 완료 여부, 기본값은 false
+
+    // 별점 검증 메서드
+    public void setRating(int rating) {
+        if (rating < 1 || rating > 5) {
+            throw new IllegalArgumentException("Rating must be between 1 and 5.");
+        }
+        this.rating = rating;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now(); // 저장 시 자동으로 작성 시간 설정
+    }
 }
