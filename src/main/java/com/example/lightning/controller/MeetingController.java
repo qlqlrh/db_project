@@ -79,6 +79,10 @@ public class MeetingController {
                 model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
                 return "login";
             }
+            if ("Freshman".equals(currentUser.getRole().name())) {
+                model.addAttribute("error", "Freshman은 모임을 등록할 수 없습니다.");
+                return "registerMeeting";
+            }
 
             // Meeting 객체 생성 및 값 설정
             Meeting meeting = new Meeting();
