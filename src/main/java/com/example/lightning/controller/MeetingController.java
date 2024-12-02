@@ -132,8 +132,20 @@ public class MeetingController {
         Meeting meeting = meetingService.getMeetingById(meetingId);
 
         if (meeting == null || user == null) {
-            model.addAttribute("error", "유효하지 않은 모임 또는 사용자입니다.");
-            return "redirect:/meetings/apply";
+            return "redirect:/meetings/apply?error=invalid";
+        }
+
+        // Professor 예외 처리 (Professor는 모든 모임 신청 가능)
+        if (!user.getRole().equals(User.Role.Professor)) {
+            // 모임 대상 검증
+            if (!meeting.getCreatedFor().equalsIgnoreCase(user.getRole().name())) {
+                return "redirect:/meetings/apply?error=notApply";
+            }
+
+            // 최대 인원 초과 검증
+            if (meeting.getParticipantCount() >= meeting.getMaxParticipants()) {
+                return "redirect:/meetings/apply?full";
+            }
         }
 
         // 모임 날짜로부터 요일 가져오기
@@ -145,20 +157,12 @@ public class MeetingController {
 
         // 중복 신청 확인
         if (enrollmentService.existsByUserAndMeeting(user, meeting)) {
-            model.addAttribute("error", "You have already applied for this meeting.");
             return "redirect:/meetings/apply?error=duplicate";
         }
 
         // 시간표 충돌 확인
         if (timetableService.isConflictWithTimetable(userId, dayOfWeekString, startTime, endTime)) {
-            model.addAttribute("error", "The meeting conflicts with your timetable.");
             return "redirect:/meetings/apply?error=conflict";
-        }
-
-        // 최대 인원 초과 확인
-        if (meeting.getParticipantCount() >= meeting.getMaxParticipants()) {
-            model.addAttribute("error", "The meeting is already full.");
-            return "redirect:/meetings/apply?error=full";
         }
 
         // 모임 신청 처리

@@ -11,14 +11,30 @@
             const error = urlParams.get("error");
             const success = urlParams.get("success");
 
-            if (error === "duplicate") {
-                alert("You have already applied for this meeting.");
-            } else if (error === "conflict") {
-                alert("The meeting conflicts with your timetable.");
-            } else if (error === "full") {
-                alert("The meeting is already full.");
-            } else if (success === "true") {
-                alert("Successfully applied for the meeting!");
+            if (error) {
+                switch (error) {
+                    case "duplicate":
+                        alert("이미 신청한 모임입니다.");
+                        break;
+                    case "conflict":
+                        alert("시간표와 중복되는 모임입니다.");
+                        break;
+                    case "full":
+                        alert("모임 최대 인원이 다 찼습니다. 다른 모임을 신청해주세요!");
+                        break;
+                    case "notApply":
+                        alert("모임 신청 대상이 아닙니다. 다른 모임을 신청해주세요!");
+                        break;
+                    case "invalid":
+                        alert("유효하지 않은 모임 또는 사용자입니다.");
+                        break;
+                    default:
+                        alert("An unknown error occurred. Please try again.");
+                }
+            }
+
+            if (success === "true") {
+                alert("성공적으로 신청되었습니다!");
             }
         };
     </script>
