@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -147,7 +147,12 @@
     </table>
 </div>
 
+<div id="meetings" th:text="${meetingsJson}" style="display: none;"></div>
+
 <script>
+    const meetings = JSON.parse(document.querySelector("#meetings").textContent);
+    console.log(meetings);
+
     const calendarBody = document.querySelector("#calendar tbody");
     const monthYear = document.querySelector("#monthYear");
     let currentDate = new Date();
@@ -175,6 +180,19 @@
             const cell = document.createElement("td");
             cell.textContent = day;
 
+            // Check if there are meetings on the day
+            const meetingDate = new Date(year, month, day);
+            meetings.forEach(meeting => {
+                console.log(meeting.title);
+                const meetingDate = new Date(meeting.date);
+                if (meetingDate.getFullYear() === year && meetingDate.getMonth() === month && meetingDate.getDate() === day) {
+                    cell.classList.add("event");
+                    // add text in new line
+                    const lineBreak = document.createElement("br");
+                    cell.appendChild(lineBreak);
+                    cell.appendChild(document.createTextNode(meeting.title + " " + meeting.createdByName));
+                }
+            });
             if ((firstDay + day - 1) % 7 === 0) {
                 calendarBody.appendChild(row);
                 row = document.createElement("tr");
