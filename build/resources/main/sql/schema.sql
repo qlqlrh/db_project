@@ -14,7 +14,7 @@ CREATE TABLE "users" (
                          "password" VARCHAR(30) NOT NULL
 );
 
--- CREATE TABLE meeting
+-- 변경된 meeting 테이블 생성
 CREATE TABLE "meeting" (
                            "meeting_id" SERIAL PRIMARY KEY,
                            "user_id" INT NOT NULL,
@@ -24,6 +24,7 @@ CREATE TABLE "meeting" (
                            "time" TIME NOT NULL,
                            "max_participants" INT NOT NULL,
                            "participant_count" INT DEFAULT 0 NOT NULL,
+                           is_completed BOOLEAN DEFAULT FALSE,         -- 모임 완료 여부
                            "created_for" VARCHAR(50) CHECK ("created_for" IN ('Freshman', 'Senior_Student')) NOT NULL,
                            "created_by_role" VARCHAR(50) CHECK ("created_by_role" IN ('Senior_Student', 'Professor')) NOT NULL,
                            CONSTRAINT "FK_MEETING_USER" FOREIGN KEY ("user_id") REFERENCES "users" ("user_id") ON DELETE CASCADE
@@ -40,15 +41,15 @@ CREATE TABLE "enrollment" (
 );
 
 -- CREATE TABLE review
-CREATE TABLE "review" (
-                          "review_id" SERIAL PRIMARY KEY,
-                          "meeting_id" INT NOT NULL,
-                          "user_id" INT NOT NULL,
-                          "rating" INT CHECK ("rating" BETWEEN 1 AND 5) NOT NULL,
-                          "comment" TEXT NOT NULL,
-                          "created_at" TIMESTAMP NOT NULL,
-                          CONSTRAINT "FK_REVIEW_MEETING" FOREIGN KEY ("meeting_id") REFERENCES "meeting" ("meeting_id") ON DELETE CASCADE,
-                          CONSTRAINT "FK_REVIEW_USER" FOREIGN KEY ("user_id") REFERENCES "users" ("user_id") ON DELETE CASCADE
+CREATE TABLE review (
+                        review_id SERIAL PRIMARY KEY,                -- 후기 ID
+                        meeting_id INT NOT NULL,                    -- 모임 ID (FK)
+                        user_id INT NOT NULL,                       -- 후기 작성자 ID (FK)
+                        rating INT CHECK (rating BETWEEN 1 AND 5),  -- 별점 (1~5)
+                        comment TEXT NOT NULL,                      -- 한줄 후기
+                        created_at TIMESTAMP DEFAULT NOW(),         -- 후기 작성 시간
+                        CONSTRAINT fk_review_meeting FOREIGN KEY (meeting_id) REFERENCES meeting (meeting_id) ON DELETE CASCADE,
+                        CONSTRAINT fk_review_user FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
 );
 
 -- CREATE TABLE timetable

@@ -48,6 +48,10 @@ public class Meeting {
     @Column(name = "created_by_role", nullable = false, length = 50)
     private String createdByRole = "USER"; // 기본값 설정
 
+    // 추가
+    @Column(name = "is_completed", nullable = false)
+    private boolean isCompleted = false; // 모임 완료 여부, 기본값은 false
+
     @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Enrollment> enrollments = new ArrayList<>();
 

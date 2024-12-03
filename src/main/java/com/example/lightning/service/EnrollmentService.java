@@ -25,5 +25,4 @@ public class EnrollmentService {
     public List<Meeting> getMeetingsByUserId(Long userId) {
         return enrollmentRepository.findMeetingsByUserId(userId);
     }
-
 }

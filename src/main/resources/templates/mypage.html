@@ -149,7 +149,7 @@
 
 <!-- Timetable Section -->
 <div class="section">
-    <h2>Your Timetable</h2>
+    <h2>내 시간표</h2>
     <table>
         <thead>
         <tr>
@@ -170,7 +170,7 @@
 
 <!-- Enrolled Meetings Section -->
 <div class="section">
-    <h2>Meetings You Have Applied For</h2>
+    <h2>내가 참여한 모임</h2>
     <table>
         <thead>
         <tr>
@@ -178,6 +178,7 @@
             <th>Date</th>
             <th>Time</th>
             <th>Location</th>
+            <th>Review</th>
         </tr>
         </thead>
         <tbody>
@@ -186,10 +187,78 @@
             <td th:text="${enrolledMeeting.date}"></td>
             <td th:text="${enrolledMeeting.time}"></td>
             <td th:text="${enrolledMeeting.space}"></td>
+            <td>
+                <button th:if="${!reviewStatusMap[enrolledMeeting.meetingId]}"
+                        th:attr="data-meeting-id=${enrolledMeeting.meetingId}"
+                        class="review-btn">
+                    후기 작성하기
+                </button>
+                <button th:if="${reviewStatusMap[enrolledMeeting.meetingId]}" disabled>
+                    후기 작성 완료
+                </button>
+            </td>
         </tr>
         </tbody>
     </table>
 </div>
+
+<!-- Created Meetings Section -->
+<div class="section">
+    <h2>내가 만든 모임</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Done</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="createdMeeting : ${createdMeetings}">
+            <td th:text="${createdMeeting.title}"></td>
+            <td th:text="${createdMeeting.date}"></td>
+            <td th:text="${createdMeeting.time}"></td>
+            <td th:text="${createdMeeting.space}"></td>
+            <td th:text="${createdMeeting.isCompleted ? '완료됨' : '진행 중'}"></td>
+            <td>
+                <button th:if="${!createdMeeting.isCompleted}"
+                        th:attr="data-meeting-id=${createdMeeting.meetingId}"
+                        class="complete-btn">
+                    완료하기
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+    // 모임 완료 처리
+    document.querySelectorAll('.complete-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const meetingId = this.getAttribute('data-meeting-id');
+            fetch(`/meetings/complete/${meetingId}`, { method: 'POST' })
+                .then(response => {
+                    if (response.ok) {
+                        alert('모임이 완료되었습니다.');
+                        location.reload();
+                    } else {
+                        alert('모임 완료 처리 중 오류가 발생했습니다.');
+                    }
+                });
+        });
+    });
+
+    // 후기 작성 페이지 이동
+    document.querySelectorAll('.review-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const meetingId = this.getAttribute('data-meeting-id');
+            window.location.href = `/reviews/create/${meetingId}`;
+        });
+    });
+</script>
 
 </body>
 </html>

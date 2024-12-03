@@ -12,6 +12,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -167,6 +169,11 @@ public class MeetingController {
             return "redirect:/meetings/apply?error=invalid";
         }
 
+        // 모임장이 자신이 만든 모임에 신청하려는 경우 제한
+        if (meeting.getUser().getUserId().equals(userId)) {
+            return "redirect:/meetings/apply?error=creator";
+        }
+
         // Professor 예외 처리 (Professor는 모든 모임 신청 가능)
         if (!user.getRole().equals(User.Role.Professor)) {
             // 모임 대상 검증
@@ -211,4 +218,22 @@ public class MeetingController {
         model.addAttribute("message", "모임 신청이 성공적으로 완료되었습니다!");
         return "redirect:/meetings/apply?success=true";
     }
+
+    // 모임 완료 처리
+    @PostMapping("/complete/{meetingId}")
+    public ResponseEntity<Void> completeMeeting(@PathVariable Long meetingId, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Meeting meeting = meetingService.getMeetingById(meetingId);
+        if (meeting == null || !meeting.getUser().getUserId().equals(userId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        meetingService.completeMeeting(meetingId);
+        return ResponseEntity.ok().build();
+    }
+
 }

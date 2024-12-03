@@ -30,4 +30,15 @@ public class MeetingService {
         meetingRepository.save(meeting);
     }
 
+    public List<Meeting> getMeetingsByCreator(Long userId) {
+        return meetingRepository.findByUser_UserId(userId);
+    }
+
+    public void completeMeeting(Long meetingId) {
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid meeting ID"));
+        meeting.setCompleted(true);
+        meetingRepository.save(meeting);
+    }
+
 }

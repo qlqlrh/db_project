@@ -111,8 +111,12 @@
 <header>
     <h1>모여봄</h1>
     <div class="auth-buttons">
-        <button class="btn login-btn">로그인</button>
-        <button class="btn signup-btn">회원가입</button>
+        <button class="btn login-btn" th:if="${!isLoggedIn}" onclick="location.href='/login'">로그인</button>
+        <button class="btn signup-btn" th:if="${!isLoggedIn}" onclick="location.href='/signup'">회원가입</button>
+        <span th:if="${isLoggedIn}">
+            <span th:text="'안녕하세요, ' + ${userName} + '님!'"></span>
+            <button class="btn logout-btn" onclick="location.href='/logout'">로그아웃</button>
+        </span>
     </div>
 </header>
 
@@ -121,6 +125,7 @@
     <button id="applyMeeting">모임신청</button>
     <button id="registerTimetable">시간표등록</button>
     <button id="myPage">마이페이지</button>
+    <button id="reviewBoard">후기 게시판</button>
 </nav>
 
 <div class="calendar-container">
@@ -231,6 +236,10 @@
 
     document.querySelector("#registerMeeting").addEventListener("click", () => {
         window.location.href = "/meetings/register";
+    });
+
+    document.querySelector("#reviewBoard").addEventListener("click", () => {
+        window.location.href = "/reviews";
     });
 
     document.querySelector(".login-btn").addEventListener("click", () => {

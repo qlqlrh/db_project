@@ -9,11 +9,11 @@ VALUES
 
 
 -- INSERT INTO Meeting
-INSERT INTO "meeting" ("user_id", "title", "space", "date", "time", "max_participants", "participant_count", "created_for", "created_by_role")
+INSERT INTO "meeting" ("user_id", "title", "space", "date", "time", "max_participants", "participant_count", "is_completed", "created_for", "created_by_role")
 VALUES
-    (2, 'Freshman Orientation', '6203 강의실', '2024-12-01', '10:00', 4, 2, 'Freshman', 'Senior_Student'),
-    (3, 'Advanced Research Workshop', '대학본부', '2024-12-05', '15:00', 10, 0, 'Senior_Student', 'Professor'),
-    (2, 'Team Project Meeting', '정문', '2024-12-03', '14:00', 4, 1, 'Freshman', 'Senior_Student');
+    (2, 'Freshman Orientation', '6203 강의실', '2024-12-01', '10:00', 4, 2, true,'Freshman', 'Senior_Student'),
+    (3, 'Advanced Research Workshop', '대학본부', '2024-12-05', '15:00', 10, 0, false, 'Senior_Student', 'Professor'),
+    (2, 'Team Project Meeting', '정문', '2024-12-03', '14:00', 4, 1, false, 'Freshman', 'Senior_Student');
 
 -- INSERT INTO Enrollment
 INSERT INTO "enrollment" ("user_id", "meeting_id", "enrollment_date")
