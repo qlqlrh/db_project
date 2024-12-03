@@ -4,6 +4,7 @@ import com.example.lightning.domain.Meeting;
 import com.example.lightning.domain.Timetable;
 import com.example.lightning.domain.User;
 import com.example.lightning.service.EnrollmentService;
+import com.example.lightning.service.MeetingService;
 import com.example.lightning.service.TimetableService;
 import com.example.lightning.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -25,6 +26,9 @@ public class UserController {
 
     @Autowired
     private EnrollmentService enrollmentService;
+
+    @Autowired
+    private MeetingService meetingService;
 
     @GetMapping("/")
     public String home(HttpSession session, Model model) {
@@ -100,6 +104,10 @@ public class UserController {
         // 시간표 가져오기
         List<Timetable> timetables = timetableService.getTimetablesByUserId(userId);
         model.addAttribute("timetables", timetables);
+
+        // 생성한 모임 정보 가져오기
+        List<Meeting> createdMeetings = meetingService.getMeetingsByCreator(userId);
+        model.addAttribute("createdMeetings", createdMeetings);
 
         // 신청한 모임 정보 가져오기
         List<Meeting> enrolledMeetings = enrollmentService.getMeetingsByUserId(userId);

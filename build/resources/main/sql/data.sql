@@ -15,7 +15,6 @@ VALUES
     (2, 'Team Project Meeting', '정문', '2024-12-03', '14:00', 4, 1, 'Freshman', 'Senior Student');
 
 -- INSERT INTO Enrollment
-INSERT INTO "enrollment" ("user_id", "meeting_id", "enrollment_date")
 VALUES
     (1, 1, '2024-11-20'), -- Alice (Freshman) 참여
     (5, 1, '2024-11-21'), -- Eve (Freshman) 참여

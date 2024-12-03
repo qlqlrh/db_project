@@ -9,6 +9,8 @@ import com.example.lightning.service.TimetableService;
 import com.example.lightning.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -188,4 +190,23 @@ public class MeetingController {
         model.addAttribute("message", "모임 신청이 성공적으로 완료되었습니다!");
         return "redirect:/meetings/apply?success=true";
     }
+
+    // 모임 완료 처리
+    @PostMapping("/complete/{meetingId}")
+    public ResponseEntity<Void> completeMeeting(@PathVariable Long meetingId, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Meeting meeting = meetingService.getMeetingById(meetingId);
+        if (meeting == null || !meeting.getUser().getUserId().equals(userId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        meetingService.completeMeeting(meetingId);
+        return ResponseEntity.ok().build();
+    }
+
+
 }

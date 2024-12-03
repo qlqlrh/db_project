@@ -125,6 +125,7 @@
     <button id="applyMeeting">모임신청</button>
     <button id="registerTimetable">시간표등록</button>
     <button id="myPage">마이페이지</button>
+    <button id="reviewBoard">후기 게시판</button>
 </nav>
 
 <div class="calendar-container">
@@ -217,6 +218,10 @@
 
     document.querySelector("#registerMeeting").addEventListener("click", () => {
         window.location.href = "/meetings/register";
+    });
+
+    document.querySelector("#reviewBoard").addEventListener("click", () => {
+        window.location.href = "/reviews";
     });
 
     document.querySelector(".login-btn").addEventListener("click", () => {
