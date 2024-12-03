@@ -29,7 +29,7 @@ public class ReviewController {
     private MeetingService meetingService;
 
     // 후기 게시판 띄움
-    @GetMapping("/")
+    @GetMapping("")
     public String reviewBoard(Model model) {
         List<Review> reviews = reviewService.getAllReviews();
         model.addAttribute("reviews", reviews);
@@ -49,26 +49,16 @@ public class ReviewController {
 
     // 후기 등록
     @PostMapping("/save")
-    public String saveReview(@RequestParam Long meetingId,
-                             @RequestParam int rating,
-                             @RequestParam String comment,
+    public String saveReview(@RequestParam("meetingId") Long meetingId,
+                             @RequestParam("rating") int rating,
+                             @RequestParam("comment") String comment,
                              HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
         if (userId == null) {
             return "redirect:/login";
         }
 
-        User user = userService.getUserById(userId);
-        Meeting meeting = meetingService.getMeetingById(meetingId);
-
-        Review review = new Review();
-        review.setUser(user);
-        review.setMeeting(meeting);
-        review.setRating(rating);
-        review.setComment(comment);
-        review.setCreatedAt(LocalDateTime.now());
-
-        reviewService.saveReview(review);
+        reviewService.saveReview(userId, meetingId, rating, comment);
         return "redirect:/reviews";
     }
 

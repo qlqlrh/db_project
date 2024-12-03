@@ -208,5 +208,4 @@ public class MeetingController {
         return ResponseEntity.ok().build();
     }
 
-
 }

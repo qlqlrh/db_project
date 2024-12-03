@@ -3,17 +3,16 @@ package com.example.lightning.controller;
 import com.example.lightning.domain.Meeting;
 import com.example.lightning.domain.Timetable;
 import com.example.lightning.domain.User;
-import com.example.lightning.service.EnrollmentService;
-import com.example.lightning.service.MeetingService;
-import com.example.lightning.service.TimetableService;
-import com.example.lightning.service.UserService;
+import com.example.lightning.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class UserController {
@@ -29,6 +28,9 @@ public class UserController {
 
     @Autowired
     private MeetingService meetingService;
+
+    @Autowired
+    private ReviewService reviewService;
 
     @GetMapping("/")
     public String home(HttpSession session, Model model) {
@@ -90,6 +92,7 @@ public class UserController {
         return "index";
     }
 
+    // 마이페이지 띄움
     @GetMapping("/mypage")
     public String myPage(HttpSession session, Model model) {
         Long userId = (Long) session.getAttribute("userId");
@@ -112,6 +115,14 @@ public class UserController {
         // 신청한 모임 정보 가져오기
         List<Meeting> enrolledMeetings = enrollmentService.getMeetingsByUserId(userId);
         model.addAttribute("enrolledMeetings", enrolledMeetings);
+
+        // 후기를 작성한 사용자 정보 가져오기
+        Map<Long, Boolean> reviewStatusMap = new HashMap<>();
+        for (Meeting meeting : enrolledMeetings) {
+            boolean hasReviewed = reviewService.hasUserReviewed(userId, meeting.getMeetingId());
+            reviewStatusMap.put(meeting.getMeetingId(), hasReviewed);
+        }
+        model.addAttribute("reviewStatusMap", reviewStatusMap);
 
         return "mypage"; // 로그인된 경우 mypage.html 렌더링
     }

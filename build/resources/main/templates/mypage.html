@@ -188,10 +188,13 @@
             <td th:text="${enrolledMeeting.time}"></td>
             <td th:text="${enrolledMeeting.space}"></td>
             <td>
-                <button th:if="${enrolledMeeting.isCompleted}"
+                <button th:if="${!reviewStatusMap[enrolledMeeting.meetingId]}"
                         th:attr="data-meeting-id=${enrolledMeeting.meetingId}"
                         class="review-btn">
-                    후기작성
+                    후기 작성하기
+                </button>
+                <button th:if="${reviewStatusMap[enrolledMeeting.meetingId]}" disabled>
+                    후기 작성 완료
                 </button>
             </td>
         </tr>
