@@ -1,0 +1,18 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Gradle
+build/
+.gradle/
+
+# Maven
+target/
+
+# macOS
+.DS_Store
+
+# 환경 설정 파일
+application.properties
+application.yml
+.env
