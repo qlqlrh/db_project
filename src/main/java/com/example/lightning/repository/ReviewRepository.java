@@ -13,4 +13,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
         Review 엔티티의 meeting 필드와 Meeting 엔티티의 meetingId 필드
      */
     boolean existsByUser_UserIdAndMeeting_MeetingId(Long userId, Long meetingId);
+
+    boolean existsByMeeting_MeetingIdAndUser_UserId(Long meetingId, Long userId);
 }

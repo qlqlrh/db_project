@@ -45,10 +45,16 @@ public class TimetableController {
             return "redirect:/login"; // 유효하지 않은 사용자라면 로그인 페이지로 이동
         }
 
+        // 시작 시간이 종료 시간보다 빠른지 확인
+        if (timetable.getStartTime().isAfter(timetable.getEndTime())) {
+            model.addAttribute("error", "시작 시간이 종료 시간보다 빨라야 합니다.");
+            return "redirect:/timetable/create?error=invalid";
+        }
+
         timetable.setUser(user); // User 객체를 Timetable에 설정
         timetableService.saveTimetable(timetable); // Timetable 저장
 
-        model.addAttribute("message", "Timetable saved successfully!");
-        return "timetable"; // 성공 메시지를 timetable.html에 표시
+        model.addAttribute("message", "시간표가 성공적으로 등록되었습니다.");
+        return "redirect:/timetable/create?success=true";
     }
 }

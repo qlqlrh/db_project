@@ -15,9 +15,12 @@ public class TimetableService {
     @Autowired
     private TimetableRepository timetableRepository;
 
-    public Timetable saveTimetable(Timetable timetable) {
-
-        return timetableRepository.save(timetable);
+    public void saveTimetable(Timetable timetable) {
+        // 검증 로직: 시작 시간이 종료 시간보다 빠르지 않으면 예외 발생
+        if (timetable.getStartTime().isAfter(timetable.getEndTime())) {
+            throw new IllegalArgumentException("시작 시간이 종료 시간보다 빨라야 합니다.");
+        }
+        timetableRepository.save(timetable);
     }
 
     public List<Timetable> getTimetablesByUserId(Long userId) {

@@ -37,14 +37,27 @@ public class ReviewController {
     }
 
     // 후기 작성 폼 띄움
+    // 후기 작성 폼
     @GetMapping("/create/{meetingId}")
-    public String createReviewForm(@PathVariable Long meetingId, Model model) {
+    public String createReviewForm(@PathVariable Long meetingId, Model model, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
         Meeting meeting = meetingService.getMeetingById(meetingId);
         if (meeting == null) {
             throw new IllegalArgumentException("Invalid meeting ID");
         }
+
+        // 사용자가 이미 후기를 작성했는지 확인
+        if (reviewService.hasUserReviewedMeeting(userId, meetingId)) {
+            model.addAttribute("error", "You have already submitted a review for this meeting.");
+            return "redirect:/mypage";
+        }
+
         model.addAttribute("meeting", meeting);
-        return "review-form";
+        return "review-form"; // 후기 작성 페이지
     }
 
     // 후기 등록
@@ -52,15 +65,20 @@ public class ReviewController {
     public String saveReview(@RequestParam("meetingId") Long meetingId,
                              @RequestParam("rating") int rating,
                              @RequestParam("comment") String comment,
-                             HttpSession session) {
+                             HttpSession session, Model model) {
         Long userId = (Long) session.getAttribute("userId");
         if (userId == null) {
             return "redirect:/login";
         }
 
-        reviewService.saveReview(userId, meetingId, rating, comment);
-        return "redirect:/reviews";
+        try {
+            reviewService.saveReview(userId, meetingId, rating, comment);
+            model.addAttribute("message", "Review submitted successfully!");
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "review-form";
+        }
+
+        return "redirect:/mypage";
     }
-
-
 }

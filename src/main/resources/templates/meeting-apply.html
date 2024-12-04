@@ -32,7 +32,7 @@
                         alert("자신이 만든 모임에는 신청할 수 없습니다. 다른 모임을 신청해주세요!");
                         break;
                     default:
-                        alert("An unknown error occurred. Please try again.");
+                        alert("알 수 없는 에러가 발생했습니다. 다시 시도해 주세요.");
                 }
             }
 
@@ -124,6 +124,21 @@
             background-color: #ddffdd;
             color: #4CAF50;
         }
+         .back-btn {
+             display: block;
+             margin: 20px auto;
+             padding: 10px 20px;
+             background-color: #4CAF50;
+             color: white;
+             text-align: center;
+             text-decoration: none;
+             border-radius: 5px;
+             width: 100px;
+         }
+
+        .back-btn:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
@@ -169,5 +184,6 @@
         </tbody>
     </table>
 </main>
+<a href="/" class="back-btn">메인으로</a>
 </body>
 </html>

@@ -2,6 +2,45 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Create Timetable</title>
+    <script>
+        // 페이지 로드 시 URL 쿼리 파라미터를 읽어서 alert 메시지 표시
+        window.onload = function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get("error");
+            const success = urlParams.get("success");
+
+            if (error) {
+                switch (error) {
+                    case "invalid":
+                        alert("시작 시간이 종료 시간보다 빨라야 합니다.");
+                        break;
+                    default:
+                        alert("알 수 없는 에러가 발생했습니다. 다시 시도해 주세요.");
+                }
+            }
+
+            if (success === "true") {
+                alert("성공적으로 신청되었습니다!");
+            }
+        }
+    </script>
+    <style>
+        .back-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            width: 100px;
+        }
+
+        .back-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
 <h1>Create Timetable</h1>
@@ -32,5 +71,6 @@
 </form>
 
 <p th:if="${message}" th:text="${message}" style="color:green"></p>
+<a href="/" class="back-btn">메인으로</a>
 </body>
 </html>

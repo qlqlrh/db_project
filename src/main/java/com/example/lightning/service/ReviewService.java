@@ -46,4 +46,7 @@ public class ReviewService {
         return reviewRepository.existsByUser_UserIdAndMeeting_MeetingId(userId, meetingId);
     }
 
+    public boolean hasUserReviewedMeeting(Long userId, Long meetingId) {
+        return reviewRepository.existsByMeeting_MeetingIdAndUser_UserId(meetingId, userId);
+    }
 }
