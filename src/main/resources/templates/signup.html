@@ -1,51 +1,129 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Signup</title>
+    <title>회원가입</title>
     <style>
-        .back-btn {
-            display: block;
-            margin: 20px auto;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-size: 1rem;
+            color: #555;
+            text-align: left;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input:focus, select:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+        }
+
+        button {
             padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
-            text-align: center;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
             text-decoration: none;
             border-radius: 5px;
-            width: 100px;
         }
 
         .back-btn:hover {
-            background-color: #45a049;
+            background-color: #d32f2f;
+        }
+
+        p {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: -10px;
         }
     </style>
 </head>
 <body>
-<h1>Signup</h1>
+<div class="container">
+    <h1>회원가입</h1>
 
-<p th:if="${error}" th:text="${error}" style="color:red"></p> <!-- 에러 메시지 표시 -->
+    <!-- 에러 메시지 표시 -->
+    <p th:if="${error}" th:text="'이미 가입된 회원입니다.'" style="color:red;"></p>
 
-<form action="/signup" method="post">
-    <label>Name:</label>
-    <input type="text" name="name" required><br>
+    <form action="/signup" method="post">
+        <input type="text" id="name" name="name" placeholder="이름을 입력하세요" required>
+        <input type="email" id="email" name="email" placeholder="이메일을 입력하세요" required>
+        <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+        <select id="role" name="role" required>
+            <option value="Select">역할 선택</option>
+            <option value="Freshman">신입생</option>
+            <option value="Senior_Student">재학생</option>
+            <option value="Professor">교수님</option>
+            <option value="Student_Council">학생회</option>
+        </select>
 
-    <label>Email:</label>
-    <input type="email" name="email" required><br>
+        <button type="submit">회원가입</button>
+    </form>
+    <a href="/" class="back-btn">메인으로</a>
+</div>
 
-    <label>Password:</label>
-    <input type="password" name="password" required><br>
-
-    <label>Role:</label>
-    <select name="role">
-        <option value="Select">select</option>
-        <option value="Freshman">Freshman</option>
-        <option value="Senior_Student">Senior Student</option>
-        <option value="Professor">Professor</option>
-        <option value="Student_Council">Student Council</option>
-    </select><br>
-
-    <button type="submit">Signup</button>
-</form>
-<a href="/" class="back-btn">메인으로</a>
+<script>
+    // URL 파라미터에서 success 값을 확인하여 alert 메시지 표시 후 로그인 페이지로 이동
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === 'true') {
+        alert('성공적으로 회원가입이 완료되었습니다!');
+        window.location.href = '/login'; // 로그인 페이지로 리다이렉션
+    }
+</script>
 </body>
 </html>

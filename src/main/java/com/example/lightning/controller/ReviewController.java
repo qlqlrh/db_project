@@ -36,7 +36,6 @@ public class ReviewController {
         return "reviewBoard";
     }
 
-    // 후기 작성 폼 띄움
     // 후기 작성 폼
     @GetMapping("/create/{meetingId}")
     public String createReviewForm(@PathVariable Long meetingId, Model model, HttpSession session) {

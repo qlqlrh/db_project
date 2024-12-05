@@ -101,19 +101,17 @@
             padding-bottom: 5px;
         }
         .back-btn {
-            display: block;
-            margin: 20px auto;
+            display: inline-block;
+            margin-top: 20px;
             padding: 10px 20px;
-            background-color: #4CAF50;
+            background-color: #f44336;
             color: white;
-            text-align: center;
             text-decoration: none;
             border-radius: 5px;
-            width: 100px;
         }
 
         .back-btn:hover {
-            background-color: #45a049;
+            background-color: #d32f2f;
         }
     </style>
     <script>
@@ -136,15 +134,15 @@
     </script>
 </head>
 <body>
-<h1>My Page</h1>
+<h1>마이페이지</h1>
 
 <!-- User Information -->
 <div class="section">
     <form id="userForm" action="/mypage" method="post" th:object="${user}">
-        <label for="name">Name:</label>
+        <label for="name">이름:</label>
         <input type="text" id="name" name="name" th:field="*{name}" readonly>
 
-        <label for="role">Role:</label>
+        <label for="role">역할:</label>
         <select id="role" name="role" th:field="*{role}" required disabled>
             <option value="Select">Select</option>
             <option value="Freshman">Freshman</option>
@@ -153,11 +151,11 @@
             <option value="Student_Council">Student Council</option>
         </select>
 
-        <label for="email">Email:</label>
+        <label for="email">이메일:</label>
         <input type="email" id="email" name="email" th:field="*{email}" readonly>
 
         <!-- Buttons -->
-        <button type="button" id="editButton" onclick="enableEdit()">Edit</button>
+        <button type="button" id="editButton" onclick="enableEdit()">수정하기</button>
         <button type="submit" id="saveButton" style="display: none;" onclick="disableEdit()">Save</button>
     </form>
 </div>
@@ -168,9 +166,9 @@
     <table>
         <thead>
         <tr>
-            <th>Day</th>
-            <th>Start Time</th>
-            <th>End Time</th>
+            <th>요일</th>
+            <th>시작 시간</th>
+            <th>종료 시간</th>
         </tr>
         </thead>
         <tbody>
@@ -189,11 +187,11 @@
     <table>
         <thead>
         <tr>
-            <th>Title</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Location</th>
-            <th>Review</th>
+            <th>제목</th>
+            <th>날짜</th>
+            <th>시간</th>
+            <th>장소</th>
+            <th>후기</th>
         </tr>
         </thead>
         <tbody>
@@ -228,12 +226,12 @@
     <table>
         <thead>
         <tr>
-            <th>Title</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Location</th>
-            <th>Status</th>
-            <th>Done</th>
+            <th>제목</th>
+            <th>날짜</th>
+            <th>시간</th>
+            <th>장소</th>
+            <th>상태</th>
+            <th>종료</th>
         </tr>
         </thead>
         <tbody>

@@ -2,6 +2,105 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Create Timetable</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #4CAF50;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            text-align: left;
+        }
+
+        select,
+        input[type="time"],
+        button {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        .alert {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .success {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
     <script>
         // 페이지 로드 시 URL 쿼리 파라미터를 읽어서 alert 메시지 표시
         window.onload = function () {
@@ -24,53 +123,37 @@
             }
         }
     </script>
-    <style>
-        .back-btn {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 5px;
-            width: 100px;
-        }
-
-        .back-btn:hover {
-            background-color: #45a049;
-        }
-    </style>
 </head>
 <body>
-<h1>Create Timetable</h1>
+<div class="container">
+    <h1>시간표 등록</h1>
 
-<form action="/timetable/create" method="post">
-    <!-- Day of Week -->
-    <label for="dayOfWeek">Day of Week:</label>
-    <select id="dayOfWeek" name="dayOfWeek" required>
-        <option value="MONDAY">Monday</option>
-        <option value="TUESDAY">Tuesday</option>
-        <option value="WEDNESDAY">Wednesday</option>
-        <option value="THURSDAY">Thursday</option>
-        <option value="FRIDAY">Friday</option>
-        <option value="SATURDAY">Saturday</option>
-        <option value="SUNDAY">Sunday</option>
-    </select><br>
+    <form action="/timetable/create" method="post">
+        <!-- Day of Week -->
+        <label for="dayOfWeek">요일:</label>
+        <select id="dayOfWeek" name="dayOfWeek" required>
+            <option value="MONDAY">Monday</option>
+            <option value="TUESDAY">Tuesday</option>
+            <option value="WEDNESDAY">Wednesday</option>
+            <option value="THURSDAY">Thursday</option>
+            <option value="FRIDAY">Friday</option>
+            <option value="SATURDAY">Saturday</option>
+            <option value="SUNDAY">Sunday</option>
+        </select>
 
-    <!-- Start Time -->
-    <label for="startTime">Start Time:</label>
-    <input id="startTime" type="time" name="startTime" required><br>
+        <!-- Start Time -->
+        <label for="startTime">시작 시간:</label>
+        <input id="startTime" type="time" name="startTime" required>
 
-    <!-- End Time -->
-    <label for="endTime">End Time:</label>
-    <input id="endTime" type="time" name="endTime" required><br>
+        <!-- End Time -->
+        <label for="endTime">종료 시간:</label>
+        <input id="endTime" type="time" name="endTime" required>
 
-    <!-- Submit Button -->
-    <button type="submit">Save Timetable</button>
-</form>
+        <!-- Submit Button -->
+        <button type="submit">시간표 저장</button>
+    </form>
 
-<p th:if="${message}" th:text="${message}" style="color:green"></p>
-<a href="/" class="back-btn">메인으로</a>
+    <a href="/" class="back-btn">메인으로</a>
+</div>
 </body>
 </html>

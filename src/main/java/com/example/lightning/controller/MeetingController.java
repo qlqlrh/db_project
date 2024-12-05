@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping({"/meetings", "/"})
+@RequestMapping({"/meetings"})
 public class MeetingController {
 
     @Autowired
@@ -40,29 +40,6 @@ public class MeetingController {
 
     @Autowired
     private UserService userService;
-
-    // 메인 페이지 달력을 위한 모델 등록
-    @GetMapping("/")
-    public String home(Model model) {
-        List<Meeting> meetings = meetingService.getAllMeetings();
-        if (meetings == null) {
-            meetings = new ArrayList<>();
-        }
-        // meetingsDTO: Meeting 객체를 MeetingDTO 객체로 변환
-        List<MeetingDTO> meetingsDTO = meetings.stream().map(MeetingDTO::new).collect(Collectors.toList());
-        // meetingsJson: meetingsDTO를 JSON 문자열로 변환
-        String meetingsJson = "";
-        try {
-            meetingsJson = new ObjectMapper().writeValueAsString(meetingsDTO);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        //System.out.println("meetingsJson: " + meetingsJson);
-
-        model.addAttribute("meetingsJson", meetingsJson);
-
-        return "index";
-    }
 
     // 모임 등록 페이지
     @GetMapping("/register")
@@ -235,5 +212,4 @@ public class MeetingController {
         meetingService.completeMeeting(meetingId);
         return ResponseEntity.ok().build();
     }
-
 }

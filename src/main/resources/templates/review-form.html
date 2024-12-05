@@ -5,20 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>후기 작성</title>
     <style>
-        .back-btn {
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 30px 0;
+            color: #4CAF50;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
             display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+
+        input[type="text"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input[type="text"]:read-only {
+            background-color: #f9f9f9;
+            color: #666;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .back-btn {
+            display: inline-block;
             margin: 20px auto;
             padding: 10px 20px;
-            background-color: #4CAF50;
+            background-color: #f44336;
             color: white;
             text-align: center;
             text-decoration: none;
             border-radius: 5px;
-            width: 100px;
+            width: auto;
         }
 
         .back-btn:hover {
-            background-color: #45a049;
+            background-color: #d32f2f;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .footer {
+            text-align: center;
+            margin: 20px 0;
+            color: #777;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -27,30 +104,42 @@
 <form th:action="@{/reviews/save}" method="POST">
     <input type="hidden" name="meetingId" th:value="${meeting.meetingId}">
 
-    <label for="title">모임 제목:</label>
-    <input type="text" id="title" name="title" th:value="${meeting.title}" readonly>
+    <div class="form-group">
+        <label for="title">모임 제목:</label>
+        <input type="text" id="title" name="title" th:value="${meeting.title}" readonly>
+    </div>
 
-    <label for="date">모임 일시:</label>
-    <input type="text" id="date" name="date"
-           th:value="${meeting.date + ' ' + meeting.time}" readonly>
+    <div class="form-group">
+        <label for="date">모임 일시:</label>
+        <input type="text" id="date" name="date" th:value="${meeting.date + ' ' + meeting.time}" readonly>
+    </div>
 
-    <label for="organizer">모임장:</label>
-    <input type="text" id="organizer" name="organizer" th:value="${meeting.user.name}" readonly>
+    <div class="form-group">
+        <label for="organizer">모임장:</label>
+        <input type="text" id="organizer" name="organizer" th:value="${meeting.user.name}" readonly>
+    </div>
 
-    <label for="rating">별점:</label>
-    <select id="rating" name="rating" required>
-        <option value="5">★★★★★</option>
-        <option value="4">★★★★☆</option>
-        <option value="3">★★★☆☆</option>
-        <option value="2">★★☆☆☆</option>
-        <option value="1">★☆☆☆☆</option>
-    </select>
+    <div class="form-group">
+        <label for="rating">별점:</label>
+        <select id="rating" name="rating" required>
+            <option value="5">★★★★★</option>
+            <option value="4">★★★★☆</option>
+            <option value="3">★★★☆☆</option>
+            <option value="2">★★☆☆☆</option>
+            <option value="1">★☆☆☆☆</option>
+        </select>
+    </div>
 
-    <label for="comment">한줄 후기:</label>
-    <textarea id="comment" name="comment" rows="3" required></textarea>
+    <div class="form-group">
+        <label for="comment">한줄 후기:</label>
+        <textarea id="comment" name="comment" rows="3" placeholder="모임에 대한 소감을 입력하세요" required></textarea>
+    </div>
 
     <button type="submit">후기 제출</button>
 </form>
-<a href="/" class="back-btn">메인으로</a>
+<div class="footer">
+    <a href="/" class="back-btn">메인으로</a>
+    <p>© 2025 후기 작성 페이지. All rights reserved.</p>
+</div>
 </body>
 </html>

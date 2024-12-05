@@ -1,18 +1,23 @@
 package com.example.lightning.controller;
 
 import com.example.lightning.domain.Meeting;
+import com.example.lightning.domain.MeetingDTO;
 import com.example.lightning.domain.Timetable;
 import com.example.lightning.domain.User;
 import com.example.lightning.service.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class UserController {
@@ -32,6 +37,7 @@ public class UserController {
     @Autowired
     private ReviewService reviewService;
 
+    // 메인 페이지 달력을 위한 모델 등록
     @GetMapping("/")
     public String home(HttpSession session, Model model) {
         Long userId = (Long) session.getAttribute("userId");
@@ -42,7 +48,25 @@ public class UserController {
         } else {
             model.addAttribute("isLoggedIn", false);
         }
-        return "index"; // HTML 파일 이름
+
+        List<Meeting> meetings = meetingService.getAllMeetings();
+        if (meetings == null) {
+            meetings = new ArrayList<>();
+        }
+        // meetingsDTO: Meeting 객체를 MeetingDTO 객체로 변환
+        List<MeetingDTO> meetingsDTO = meetings.stream().map(MeetingDTO::new).collect(Collectors.toList());
+        // meetingsJson: meetingsDTO를 JSON 문자열로 변환
+        String meetingsJson = "";
+        try {
+            meetingsJson = new ObjectMapper().writeValueAsString(meetingsDTO);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        //System.out.println("meetingsJson: " + meetingsJson);
+
+        model.addAttribute("meetingsJson", meetingsJson);
+
+        return "index";
     }
 
 
@@ -55,9 +79,9 @@ public class UserController {
     public String registerUser(@ModelAttribute User user, Model model) {
         try {
             userService.registerUser(user);
-            model.addAttribute("message", "Registration successful!");
-            return "login"; // 회원가입 성공 후 로그인 페이지로 이동
+            return "redirect:/signup?success=true"; // 회원가입 성공 후 로그인 페이지로 이동
         } catch (IllegalArgumentException e) {
+            // 이메일 중복 처리
             model.addAttribute("error", e.getMessage());
             return "signup"; // 에러 발생 시 회원가입 페이지로 다시 이동
         }
@@ -85,11 +109,6 @@ public class UserController {
     public String logout(HttpSession session) {
         session.invalidate(); // 세션 무효화
         return "redirect:/";
-    }
-
-    @GetMapping("/home")
-    public String homePage() {
-        return "index";
     }
 
     // 마이페이지 띄움
