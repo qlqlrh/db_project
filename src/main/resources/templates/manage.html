@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage members</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        input:read-only {
+            background-color: #f5f5f5;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .section {
+            margin: 30px 0;
+        }
+
+        .section h2 {
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #4CAF50;
+            border-bottom: 2px solid #4CAF50;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .back-btn:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+<h1>회원 관리</h1>
+
+<div id="usersJson" th:text="${usersJson}" style="display: none"></div>
+<div id="userFormsContainer" class="section"></div>
+
+<a href="/" class="back-btn">메인으로</a>
+
+<script>
+    const usersJson = document.getElementById('usersJson').textContent;
+    const users = JSON.parse(usersJson);
+    const userFormsContainer = document.getElementById('userFormsContainer');
+
+    users.forEach(user => {
+        const form = document.createElement('form');
+        form.id = 'userForm';
+        form.action = `/manage/${user.userId}`;
+        form.method = 'post';
+
+        form.innerHTML = `
+      <label for="name">이름:</label>
+      <input type="text" id="name" name="name" value="${user.name}" readonly>
+
+      <label for="role">역할:</label>
+      <select id="role" name="role" required disabled>
+        <option value="Select">Select</option>
+        <option value="Freshman" ${user.role === 'Freshman' ? 'selected' : ''}>Freshman</option>
+        <option value="Senior_Student" ${user.role === 'Senior_Student' ? 'selected' : ''}>Senior Student</option>
+        <option value="Professor" ${user.role === 'Professor' ? 'selected' : ''}>Professor</option>
+        <option value="Student_Council" ${user.role === 'Student_Council' ? 'selected' : ''}>Student Council</option>
+      </select>
+
+      <label for="email">이메일:</label>
+      <input type="email" id="email" name="email" value="${user.email}" readonly>
+
+      <!-- Buttons -->
+      <button type="button" id="editButton" onclick="enableEdit(this)">수정하기</button>
+      <button type="submit" id="saveButton" style="display: none;" onclick="disableEdit(this)">Save</button>
+    `;
+
+        userFormsContainer.appendChild(form);
+    });
+
+    function enableEdit(button) {
+        const form = button.closest('form');
+        form.querySelectorAll('input, select').forEach(input => input.removeAttribute('readonly'));
+        form.querySelector('#role').removeAttribute('disabled');
+        form.querySelector('#saveButton').style.display = 'inline';
+        form.querySelector('#editButton').style.display = 'none';
+    }
+
+    function prepareFormForSubmit(button) {
+        const form = button.closest('form');
+        form.querySelectorAll('input, select').forEach(input => input.removeAttribute('readonly'));
+    }
+    // // Edit mode toggle
+    // function enableEdit() {
+    //     document.getElementById("userForm").querySelectorAll("input").forEach(input => input.readOnly = false);
+    //     document.getElementById("role").disabled = false; // Enable
+    //     document.getElementById("saveButton").style.display = "inline";
+    //     document.getElementById("editButton").style.display = "none";
+    // }
+    //
+    // function disableEdit() {
+    //     document.getElementById("userForm").querySelectorAll("input").forEach(input => {
+    //         console.log(input); // Log input elements
+    //         input.readOnly = true; // Set to read-only
+    //     });
+    //     console.log("test");
+    // }
+</script>
+</body>
+</html>

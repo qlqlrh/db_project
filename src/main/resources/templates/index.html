@@ -126,6 +126,7 @@
     <button id="registerTimetable">시간표등록</button>
     <button id="myPage">마이페이지</button>
     <button id="reviewBoard">후기 게시판</button>
+    <button th:if="${userRole == T(com.example.lightning.domain.User.Role).Student_Council}" id="manageMembers">회원관리</button>
 </nav>
 
 <div class="calendar-container">
@@ -236,6 +237,10 @@
 
     document.querySelector("#registerMeeting").addEventListener("click", () => {
         window.location.href = "/meetings/register";
+    });
+
+    document.querySelector("#manageMembers").addEventListener("click", () => {
+        window.location.href = "/manage";
     });
 
     document.querySelector("#reviewBoard").addEventListener("click", () => {

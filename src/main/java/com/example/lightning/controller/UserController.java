@@ -1,9 +1,6 @@
 package com.example.lightning.controller;
 
-import com.example.lightning.domain.Meeting;
-import com.example.lightning.domain.MeetingDTO;
-import com.example.lightning.domain.Timetable;
-import com.example.lightning.domain.User;
+import com.example.lightning.domain.*;
 import com.example.lightning.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,6 +42,7 @@ public class UserController {
             User user = userService.getUserById(userId);
             model.addAttribute("isLoggedIn", true);
             model.addAttribute("userName", user.getName());
+            model.addAttribute("userRole", user.getRole());
         } else {
             model.addAttribute("isLoggedIn", false);
         }
@@ -144,6 +142,68 @@ public class UserController {
         model.addAttribute("reviewStatusMap", reviewStatusMap);
 
         return "mypage"; // 로그인된 경우 mypage.html 렌더링
+    }
+
+    // 회원관리
+    @GetMapping("/manage")
+    public String manageUsers(HttpSession session, Model model) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return "redirect:/login"; // 로그인하지 않은 경우
+        }
+
+        User user = userService.getUserById(userId);
+        if (!"Student_Council".equals(user.getRole().name())) {
+            return "redirect:/"; // 권한이 없는 경우 홈 페이지로 리다이렉트
+        }
+
+        List<User> users = userService.getAllUsers();
+
+        if (users == null) {
+            users = new ArrayList<>();
+        }
+
+        List<UserDTO> usersDTO = users.stream().map(UserDTO::new).collect(Collectors.toList());
+        System.out.println(usersDTO);
+
+        String usersJson = "";
+        try {
+            usersJson = new ObjectMapper().writeValueAsString(usersDTO);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        System.out.println("usersJson: " + usersJson);
+
+        model.addAttribute("usersJson", usersJson);
+
+        return "manage";
+    }
+
+    @PostMapping("/manage/{userId}")
+    public String updateUser(@PathVariable Long userId, @ModelAttribute User user, Model model) {
+        try {
+            // Fetch the existing user from the database
+            User existingUser = userService.getUserById(userId);
+            if (existingUser == null) {
+                model.addAttribute("error", "User not found!");
+                return "redirect:/manage";
+            }
+
+            // Update the user details
+            existingUser.setName(user.getName());
+            existingUser.setRole(user.getRole());
+            existingUser.setEmail(user.getEmail());
+
+            // Save the updated user
+            userService.updateUser(existingUser);
+
+            model.addAttribute("message", "User updated successfully!");
+        } catch (Exception e) {
+            model.addAttribute("error", "Error updating user!");
+            e.printStackTrace();
+        }
+
+        return "redirect:/manage";
     }
 
     @PostMapping("/mypage")
