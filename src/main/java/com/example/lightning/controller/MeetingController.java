@@ -116,6 +116,14 @@ public class MeetingController {
         }
 
         List<Meeting> meetings = meetingService.getAllMeetings();
+
+        // 요일을 문자열로 추가
+        meetings.forEach(meeting -> {
+            String dayOfWeek = meeting.getDate().getDayOfWeek().toString(); // 요일 추출
+            meeting.setDayOfWeek(dayOfWeek); // Meeting 객체에 dayOfWeek 필드가 있다고 가정
+        });
+
+
         model.addAttribute("meetings", meetings);
         return "meeting-apply";
     }

@@ -48,6 +48,10 @@ public class Meeting {
     @Column(name = "created_by_role", nullable = false, length = 50)
     private String createdByRole = "USER"; // 기본값 설정
 
+    // 모임 신청 페이지에 요일을 띄우기 위해 추가
+    @Transient // 데이터베이스에는 저장하지 않음
+    private String dayOfWeek;
+
     // 추가
     @Column(name = "is_completed", nullable = false)
     private boolean isCompleted = false; // 모임 완료 여부, 기본값은 false

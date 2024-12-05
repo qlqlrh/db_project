@@ -152,15 +152,16 @@
     <table>
         <thead>
         <tr>
-            <th>Title</th>
-            <th>Space</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Participants</th>
-            <th>Max Participants</th>
-            <th>Target</th>
-            <th>Host</th>
-            <th>Action</th>
+            <th>제목</th>
+            <th>장소</th>
+            <th>날짜</th>
+            <th>요일</th> <!-- 요일 열 추가 -->
+            <th>시간</th>
+            <th>현재 신청자 수</th>
+            <th>최대 참가자 수</th>
+            <th>참가 대상</th>
+            <th>모임장</th>
+            <th>신청</th>
         </tr>
         </thead>
         <tbody>
@@ -168,6 +169,7 @@
             <td th:text="${meeting.title}"></td>
             <td th:text="${meeting.space}"></td>
             <td th:text="${meeting.date}"></td>
+            <td th:text="${meeting.dayOfWeek}"></td> <!-- 요일 데이터 표시 -->
             <td th:text="${meeting.time}"></td>
             <td th:text="${meeting.participantCount}"></td>
             <td th:text="${meeting.maxParticipants}"></td>
@@ -175,7 +177,7 @@
             <td th:text="${meeting.user.name + ' (' + meeting.createdByRole + ')'}"></td>
             <td>
                 <form th:action="@{/meetings/apply/{id}(id=${meeting.meetingId})}" method="post">
-                    <button type="submit">Apply</button>
+                    <button type="submit">신청하기</button>
                 </form>
             </td>
         </tr>
