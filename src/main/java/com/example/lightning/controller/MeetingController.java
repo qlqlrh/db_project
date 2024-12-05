@@ -1,15 +1,10 @@
 package com.example.lightning.controller;
 
-import com.example.lightning.domain.Enrollment;
-import com.example.lightning.domain.Meeting;
-import com.example.lightning.domain.MeetingDTO;
-import com.example.lightning.domain.User;
+import com.example.lightning.domain.*;
 import com.example.lightning.service.EnrollmentService;
 import com.example.lightning.service.MeetingService;
 import com.example.lightning.service.TimetableService;
-import com.example.lightning.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.lightning.service.UserService;;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,12 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping({"/meetings"})
@@ -165,11 +157,11 @@ public class MeetingController {
         }
 
         // 모임 날짜로부터 요일 가져오기
-        String dayOfWeekString = meeting.getDate().getDayOfWeek().toString();
+        Timetable.DayOfWeek dayOfWeek = Timetable.DayOfWeek.valueOf(meeting.getDate().getDayOfWeek().toString()); // String -> Enum 변환
 
-        // 모임 시작 시간 가져오기
+        // 모임 시작 시간과 종료 시간 가져오기
         LocalTime startTime = meeting.getTime();
-        LocalTime endTime = startTime.plusHours(2); // 예시: 모임이 2시간이라고 가정
+        LocalTime endTime = startTime.plusHours(2); // 모임은 2시간이라고 가정
 
         // 중복 신청 확인
         if (enrollmentService.existsByUserAndMeeting(user, meeting)) {
@@ -177,7 +169,7 @@ public class MeetingController {
         }
 
         // 시간표 충돌 확인
-        if (timetableService.isConflictWithTimetable(userId, dayOfWeekString, startTime, endTime)) {
+        if (timetableService.isConflictWithTimetable(userId, dayOfWeek, startTime, endTime)) {
             return "redirect:/meetings/apply?error=conflict";
         }
 

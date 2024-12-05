@@ -29,14 +29,22 @@ public class TimetableService {
     }
 
     // 시간표와 중복되는 모임인지 체크
-    public boolean isConflictWithTimetable(Long userId, String dayOfWeekString, LocalTime startTime, LocalTime endTime) {
+    public boolean isConflictWithTimetable(Long userId, Timetable.DayOfWeek dayOfWeek, LocalTime meetingStartTime, LocalTime meetingEndTime) {
 
-        // String 값을 Enum으로 변환
-        Timetable.DayOfWeek dayOfWeek = Timetable.DayOfWeek.valueOf(dayOfWeekString.toUpperCase());
+        // 사용자의 시간표에서 모임과 동일한 요일에 있는 모든 시간표를 가져옴
+        List<Timetable> timetables = timetableRepository.findByUser_UserIdAndDayOfWeek(userId, dayOfWeek);
 
-        // Repository 호출 시 Enum 값 사용
-        return timetableRepository.existsByUser_UserIdAndDayOfWeekAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
-                userId, dayOfWeek, startTime, endTime
-        );
+        for (Timetable timetable : timetables) {
+            LocalTime startTime = timetable.getStartTime();
+            LocalTime endTime = timetable.getEndTime();
+
+            // 모임 시간이 시간표와 겹치는지 확인
+            if ((meetingStartTime.isBefore(endTime) && meetingStartTime.isAfter(startTime)) ||  // 모임 시작 시간이 시간표 사이에 있음
+                    (meetingEndTime.isAfter(startTime) && meetingEndTime.isBefore(endTime)) ||  // 모임 종료 시간이 시간표 사이에 있음
+                    (meetingStartTime.equals(startTime) || meetingEndTime.equals(endTime))) {   // 모임 시간이 시간표 시작 또는 종료 시간과 일치
+                return true; // 충돌 발생
+            }
+        }
+        return false;
     }
 }

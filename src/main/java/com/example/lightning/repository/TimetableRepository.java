@@ -12,8 +12,6 @@ public interface TimetableRepository extends JpaRepository<Timetable, Long> {
     // Timetable 엔티티에서 user 필드의 User 객체 내부의 userId를 참조
     List<Timetable> findByUser_UserId(Long userId); // 정확한 경로 지정
 
-    // 해당 유저의 시간표가 존재 여부와 특정 시간과의 일치 여부 확인
-    boolean existsByUser_UserIdAndDayOfWeekAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
-            Long userId, Timetable.DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime
-    );
+    /// 사용자 ID와 요일로 시간표 검색
+    List<Timetable> findByUser_UserIdAndDayOfWeek(Long userId, Timetable.DayOfWeek dayOfWeek);
 }
