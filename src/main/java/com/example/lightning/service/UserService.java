@@ -79,4 +79,19 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional // 트랜잭션 설정 추가
+    public void updateUserAndRole(User user) {
+        // student_role 테이블에 student_id가 존재하는지 확인
+        boolean exists = studentRoleRepository.existsByStudentId(user.getStudentId());
+        if (!exists) {
+            throw new IllegalArgumentException("해당 student_id는 student_role 테이블에 존재하지 않습니다.");
+        }
+
+        // 사용자 업데이트
+        userRepository.save(user);
+
+        // student_role 테이블의 역할 업데이트
+        studentRoleRepository.updateRoleByStudentId(user.getStudentId(), user.getRole());
+    }
+
 }

@@ -194,24 +194,25 @@ public class UserController {
     @PostMapping("/manage/{userId}")
     public String updateUser(@PathVariable Long userId, @ModelAttribute User user, Model model) {
         try {
-            // Fetch the existing user from the database
+            // 기존 사용자 가져오기
             User existingUser = userService.getUserById(userId);
             if (existingUser == null) {
                 model.addAttribute("error", "User not found!");
                 return "redirect:/manage";
             }
 
-            // Update the user details
+            // 사용자 데이터 업데이트
             existingUser.setName(user.getName());
             existingUser.setRole(user.getRole());
             existingUser.setEmail(user.getEmail());
+            existingUser.setStudentId(user.getStudentId());
 
-            // Save the updated user
-            userService.updateUser(existingUser);
+            // 사용자와 역할 업데이트
+            userService.updateUserAndRole(existingUser);
 
-            model.addAttribute("message", "User updated successfully!");
+            model.addAttribute("successMessage", "사용자가 성공적으로 업데이트되었습니다.");
         } catch (Exception e) {
-            model.addAttribute("error", "Error updating user!");
+            model.addAttribute("errorMessage", "사용자 업데이트 중 오류가 발생했습니다.");
             e.printStackTrace();
         }
 

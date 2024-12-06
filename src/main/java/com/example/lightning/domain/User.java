@@ -29,6 +29,7 @@ public class User {
 //    private Role role;
 
     @Transient // 데이터베이스에 저장하지 않고 동적으로 계산
+    @Enumerated(EnumType.STRING) // Enum을 문자열로 저장
     private Role role;
 
     @Column(name = "email", nullable = false, unique = true, length = 100)
