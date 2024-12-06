@@ -183,7 +183,7 @@ public class UserController {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        System.out.println("usersJson: " + usersJson);
+        //System.out.println("usersJson: " + usersJson);
 
         model.addAttribute("usersJson", usersJson);
 
