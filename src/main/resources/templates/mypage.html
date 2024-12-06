@@ -253,7 +253,7 @@
     document.querySelectorAll('.complete-btn').forEach(button => {
         button.addEventListener('click', function () {
             const meetingId = this.getAttribute('data-meeting-id');
-            fetch(`/meetings/complete/${meetingId}`, { method: 'POST' })
+            fetch(`/meetings/complete/${meetingId}`, {method: 'POST'})
                 .then(response => {
                     if (response.ok) {
                         alert('모임이 완료되었습니다.');
@@ -272,6 +272,8 @@
             window.location.href = `/reviews/create/${meetingId}`;
         });
     });
+
+
 </script>
 <a href="/" class="back-btn">메인으로</a>
 </body>
