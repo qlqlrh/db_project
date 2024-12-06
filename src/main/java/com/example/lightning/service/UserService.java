@@ -58,7 +58,7 @@ public class UserService {
     public void registerUser(User user) {
         // 학번으로 역할 조회
         StudentRole studentRole = studentRoleRepository.findByStudentId(user.getStudentId())
-                .orElseThrow(() -> new IllegalArgumentException("학번에 해당하는 역할이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("사용자 정보가 없습니다."));
 
         // 역할 설정
         user.setRole(studentRole.getRole());

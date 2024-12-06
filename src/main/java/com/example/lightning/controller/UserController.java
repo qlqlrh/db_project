@@ -254,11 +254,20 @@ public class UserController {
         }
 
         try {
+            // 비밀번호 업데이트
             userService.updatePassword(userId, newPassword);
+
+            // 업데이트된 사용자 정보를 가져옴
+            User updatedUser = userService.getUserById(userId);
+
+            // 모델과 세션에 사용자 정보 다시 설정
+            model.addAttribute("user", updatedUser);
+            session.setAttribute("user", updatedUser);
+
             model.addAttribute("message", "비밀번호가 성공적으로 변경되었습니다.");
         } catch (Exception e) {
             model.addAttribute("error", "비밀번호 변경 중 문제가 발생했습니다.");
         }
-        return "mypage";
+        return "redirect:/mypage";
     }
 }
