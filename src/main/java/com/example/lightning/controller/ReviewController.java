@@ -30,11 +30,18 @@ public class ReviewController {
 
     // 후기 게시판 띄움
     @GetMapping("")
-    public String reviewBoard(Model model) {
-        List<Review> reviews = reviewService.getAllReviews();
+    public String reviewBoard(@RequestParam(value = "sort", defaultValue = "date") String sort, Model model) {
+        List<Review> reviews;
+        if ("rating".equals(sort)) {
+            reviews = reviewService.getReviewsSortedByRating();
+        } else {
+            reviews = reviewService.getAllReviews(); // 기본은 등록 순서대로
+        }
         model.addAttribute("reviews", reviews);
+        model.addAttribute("sort", sort);
         return "reviewBoard";
     }
+
 
     // 후기 작성 폼
     @GetMapping("/create/{meetingId}")
