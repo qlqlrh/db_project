@@ -20,6 +20,9 @@ public class TimetableService {
         if (timetable.getStartTime().isAfter(timetable.getEndTime())) {
             throw new IllegalArgumentException("시작 시간이 종료 시간보다 빨라야 합니다.");
         }
+        if (isTimetableConflict(timetable.getUser().getUserId(), timetable)) {
+            throw new IllegalArgumentException("이미 등록된 시간표와 시간이 겹칩니다.");
+        }
         timetableRepository.save(timetable);
     }
 
@@ -46,5 +49,23 @@ public class TimetableService {
             }
         }
         return false;
+    }
+
+    public boolean isTimetableConflict(Long userId, Timetable newTimetable) {
+        List<Timetable> existingTimetables = timetableRepository.findByUser_UserIdAndDayOfWeek(userId, newTimetable.getDayOfWeek());
+
+        for (Timetable existingTimetable : existingTimetables) {
+            LocalTime newStartTime = newTimetable.getStartTime();
+            LocalTime newEndTime = newTimetable.getEndTime();
+            LocalTime existingStartTime = existingTimetable.getStartTime();
+            LocalTime existingEndTime = existingTimetable.getEndTime();
+
+            // Check if the new timetable overlaps with any existing timetable
+            if ((newStartTime.isBefore(existingEndTime) && newEndTime.isAfter(existingStartTime)) ||  // New timetable overlaps with an existing timetable
+                    (newStartTime.equals(existingStartTime) || newEndTime.equals(existingEndTime))) {   // New timetable starts or ends exactly at the same time as an existing timetable
+                return true; // Conflict detected
+            }
+        }
+        return false; // No conflict
     }
 }

@@ -51,7 +51,11 @@ public class TimetableController {
             model.addAttribute("error", "시작 시간이 종료 시간보다 빨라야 합니다.");
             return "redirect:/timetable/create?error=invalid";
         }
-
+        //시간표 중복이 있는지 확인
+        if (timetableService.isConflictWithTimetable(userId, timetable.getDayOfWeek(), timetable.getStartTime(), timetable.getEndTime())) {
+            model.addAttribute("error", "이미 등록된 시간표와 시간이 겹칩니다.");
+            return "redirect:/timetable/create?error=conflict";
+        }
         timetable.setUser(user); // User 객체를 Timetable에 설정
         timetableService.saveTimetable(timetable); // Timetable 저장
 
