@@ -40,14 +40,25 @@
         .back-btn:hover {
             background-color: #d32f2f;
         }
+        .active {
+            font-weight: bold;
+            color: #4CAF50;
+        }
     </style>
 </head>
 <body>
 <h1>후기 게시판</h1>
+
+<div>
+    <a th:href="@{/reviews(sort='date')}" th:classappend="${sort == 'date'} ? 'active' : ''">최신순</a>
+    <a th:href="@{/reviews(sort='rating')}" th:classappend="${sort == 'rating'} ? 'active' : ''">별점순</a>
+</div>
+
 <table>
     <thead>
     <tr>
         <th>모임 제목</th>
+        <th>모임 날짜</th> <!-- 모임 날짜 열 추가 -->
         <th>모임장 이름</th>
         <th>별점</th>
         <th>한줄 후기</th>
@@ -56,6 +67,7 @@
     <tbody>
     <tr th:each="review : ${reviews}">
         <td th:text="${review.meeting.title}"></td>
+        <td th:text="${#temporals.format(review.meeting.date, 'yyyy-MM-dd')}"></td> <!-- 모임 날짜 표시 -->
         <td th:text="${review.meeting.user.name}"></td>
         <td th:text="${review.rating}"></td>
         <td th:text="${review.comment}"></td>

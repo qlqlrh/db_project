@@ -49,4 +49,9 @@ public class ReviewService {
     public boolean hasUserReviewedMeeting(Long userId, Long meetingId) {
         return reviewRepository.existsByMeeting_MeetingIdAndUser_UserId(meetingId, userId);
     }
+
+    // 별점순 정렬
+    public List<Review> getReviewsSortedByRating() {
+        return reviewRepository.findAllByOrderByRatingDesc(); // 별점 높은 순
+    }
 }

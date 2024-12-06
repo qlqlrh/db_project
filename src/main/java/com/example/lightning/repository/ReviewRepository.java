@@ -4,6 +4,8 @@ import com.example.lightning.domain.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
@@ -15,4 +17,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     boolean existsByUser_UserIdAndMeeting_MeetingId(Long userId, Long meetingId);
 
     boolean existsByMeeting_MeetingIdAndUser_UserId(Long meetingId, Long userId);
+
+    // 별점 높은 순으로 정렬
+    List<Review> findAllByOrderByRatingDesc();
 }
