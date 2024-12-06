@@ -41,6 +41,7 @@ public class ReviewController {
     public String createReviewForm(@PathVariable Long meetingId, Model model, HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
         if (userId == null) {
+            model.addAttribute("error", "로그인이 필요합니다.");
             return "redirect:/login";
         }
 

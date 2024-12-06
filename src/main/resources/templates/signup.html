@@ -98,20 +98,13 @@
     <h1>회원가입</h1>
 
     <!-- 에러 메시지 표시 -->
-    <p th:if="${error}" th:text="'이미 가입된 회원입니다.'" style="color:red;"></p>
+    <p th:if="${error}" th:text="${error}" class="error-message"></p>
 
     <form action="/signup" method="post">
+        <input type="text" name="studentId" placeholder="학번을 입력하세요" required>
         <input type="text" id="name" name="name" placeholder="이름을 입력하세요" required>
         <input type="email" id="email" name="email" placeholder="이메일을 입력하세요" required>
         <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
-        <select id="role" name="role" required>
-            <option value="Select">역할 선택</option>
-            <option value="Freshman">신입생</option>
-            <option value="Senior_Student">재학생</option>
-            <option value="Professor">교수님</option>
-            <option value="Student_Council">학생회</option>
-        </select>
-
         <button type="submit">회원가입</button>
     </form>
     <a href="/" class="back-btn">메인으로</a>

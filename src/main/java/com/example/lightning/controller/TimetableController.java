@@ -26,6 +26,7 @@ public class TimetableController {
     public String showTimetableForm(HttpSession session, Model model) {
         Long userId = (Long) session.getAttribute("userId");
         if (userId == null) {
+            model.addAttribute("error", "로그인이 필요합니다.");
             return "redirect:/login"; // 로그인되지 않은 사용자라면 로그인 페이지로 이동
         }
         model.addAttribute("timetable", new Timetable());

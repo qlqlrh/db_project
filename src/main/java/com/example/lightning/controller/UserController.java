@@ -1,6 +1,7 @@
 package com.example.lightning.controller;
 
 import com.example.lightning.domain.*;
+import com.example.lightning.repository.StudentRoleRepository;
 import com.example.lightning.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +34,12 @@ public class UserController {
 
     @Autowired
     private ReviewService reviewService;
+
+    @Autowired
+    private StudentRoleService studentRoleService;
+
+    @Autowired
+    private StudentRoleRepository studentRoleRepository;
 
     // 메인 페이지 달력을 위한 모델 등록
     @GetMapping("/")
@@ -91,15 +98,19 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String loginUser(@RequestParam String email, @RequestParam String password, HttpSession session, Model model) {
-        User user = userService.loginUser(email, password);
+    public String loginUser(@RequestParam String studentId, @RequestParam String password, HttpSession session, Model model) {
+        // UserService에서 학번과 비밀번호로 사용자 검증
+        User user = userService.loginUserByStudentId(studentId, password);
         if (user != null) {
+            // 세션에 사용자 정보를 저장
             session.setAttribute("userId", user.getUserId());
             session.setAttribute("userName", user.getName());
-            return "redirect:/"; // 홈 페이지로 리다이렉트
+            session.setAttribute("userRole", user.getRole());
+            return "redirect:/"; // 로그인 성공 시 홈 페이지로 리다이렉트
         } else {
-            model.addAttribute("error", "Invalid email or password!");
-            return "login";
+            // 로그인 실패 시 에러 메시지 추가
+            model.addAttribute("error", "유효하지 않은 학번이나 비밀번호입니다!");
+            return "login"; // 로그인 페이지로 다시 이동
         }
     }
 
@@ -114,6 +125,7 @@ public class UserController {
     public String myPage(HttpSession session, Model model) {
         Long userId = (Long) session.getAttribute("userId");
         if (userId == null) {
+            model.addAttribute("error", "로그인이 필요합니다.");
             return "redirect:/login"; // 로그인하지 않은 경우 login 페이지로 리다이렉트
         }
 
@@ -143,12 +155,12 @@ public class UserController {
 
         return "mypage"; // 로그인된 경우 mypage.html 렌더링
     }
-
     // 회원관리
     @GetMapping("/manage")
     public String manageUsers(HttpSession session, Model model) {
         Long userId = (Long) session.getAttribute("userId");
         if (userId == null) {
+            model.addAttribute("error", "로그인이 필요합니다.");
             return "redirect:/login"; // 로그인하지 않은 경우
         }
 
@@ -157,14 +169,13 @@ public class UserController {
             return "redirect:/"; // 권한이 없는 경우 홈 페이지로 리다이렉트
         }
 
+        // 모든 사용자 가져오기
         List<User> users = userService.getAllUsers();
+        List<UserDTO> usersDTO = users.stream().map(u -> {
+            String role = studentRoleRepository.findRoleByStudentId(u.getStudentId());
+            return new UserDTO(u, role);
+        }).collect(Collectors.toList());
 
-        if (users == null) {
-            users = new ArrayList<>();
-        }
-
-        List<UserDTO> usersDTO = users.stream().map(UserDTO::new).collect(Collectors.toList());
-        System.out.println(usersDTO);
 
         String usersJson = "";
         try {
@@ -178,6 +189,7 @@ public class UserController {
 
         return "manage";
     }
+
 
     @PostMapping("/manage/{userId}")
     public String updateUser(@PathVariable Long userId, @ModelAttribute User user, Model model) {
@@ -232,5 +244,21 @@ public class UserController {
 
         model.addAttribute("user", user); // 업데이트된 사용자 정보를 다시 모델에 추가
         return "mypage"; // 수정 후 다시 마이페이지 렌더링
+    }
+
+    @PostMapping("/mypage/updatePassword")
+    public String updatePassword(HttpSession session, @RequestParam String newPassword, Model model) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        try {
+            userService.updatePassword(userId, newPassword);
+            model.addAttribute("message", "비밀번호가 성공적으로 변경되었습니다.");
+        } catch (Exception e) {
+            model.addAttribute("error", "비밀번호 변경 중 문제가 발생했습니다.");
+        }
+        return "mypage";
     }
 }

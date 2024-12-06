@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Page</title>
+    <title>마이페이지</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -138,25 +138,21 @@
 
 <!-- User Information -->
 <div class="section">
-    <form id="userForm" action="/mypage" method="post" th:object="${user}">
-        <label for="name">이름:</label>
-        <input type="text" id="name" name="name" th:field="*{name}" readonly>
+    <h2>사용자 정보</h2>
+    <form action="/mypage" method="post">
+        <p>학번: <span th:text="${user.studentId}"></span></p>
+        <p>이름: <span th:text="${user.name}"></span></p>
+        <p>이메일: <span th:text="${user.email}"></span></p>
+        <p>역할: <span th:text="${user.role}"></span></p>
+    </form>
+</div>
 
-        <label for="role">역할:</label>
-        <select id="role" name="role" th:field="*{role}" required disabled>
-            <option value="Select">Select</option>
-            <option value="Freshman">Freshman</option>
-            <option value="Senior_Student">Senior Student</option>
-            <option value="Professor">Professor</option>
-            <option value="Student_Council">Student Council</option>
-        </select>
-
-        <label for="email">이메일:</label>
-        <input type="email" id="email" name="email" th:field="*{email}" readonly>
-
-        <!-- Buttons -->
-        <button type="button" id="editButton" onclick="enableEdit()">수정하기</button>
-        <button type="submit" id="saveButton" style="display: none;" onclick="disableEdit()">Save</button>
+<div class="section">
+    <h2>비밀번호 변경</h2>
+    <form action="/mypage/updatePassword" method="post">
+        <label>새 비밀번호:</label>
+        <input type="password" name="newPassword" required>
+        <button type="submit">비밀번호 변경</button>
     </form>
 </div>
 

@@ -112,6 +112,7 @@ public class MeetingController {
     public String showMeetingList(HttpSession session, Model model) {
         Long userId = (Long) session.getAttribute("userId");
         if (userId == null) {
+            model.addAttribute("error", "로그인이 필요합니다.");
             return "redirect:/login";
         }
 

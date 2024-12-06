@@ -1,6 +1,8 @@
 package com.example.lightning.service;
 
+import com.example.lightning.domain.StudentRole;
 import com.example.lightning.domain.User;
+import com.example.lightning.repository.StudentRoleRepository;
 import com.example.lightning.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,20 +16,13 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User registerUser(User user) {
-        // 이메일 중복 확인
-        if (userRepository.findByEmail(user.getEmail()) != null) {
-            throw new IllegalArgumentException("Email already exists: " + user.getEmail());
-        }
-        return userRepository.save(user);
-    }
+    @Autowired
+    private StudentRoleRepository studentRoleRepository;
 
-    public User loginUser(String email, String password) {
-        User user = userRepository.findByEmail(email);
-        if (user != null && user.getPassword().equals(password)) {
-            return user;
-        }
-        return null;
+    public User loginUserByStudentId(String studentId, String password) {
+        // 학번과 비밀번호로 사용자 조회
+        return userRepository.findByStudentIdAndPassword(studentId, password)
+                .orElse(null);
     }
 
     public List<User> getAllUsers() {
@@ -50,6 +45,38 @@ public class UserService {
     }
 
     public User getUserById(Long userId) {
-        return userRepository.findById(userId).orElse(null);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // 학번 기반으로 StudentRole에서 역할 조회
+        StudentRole studentRole = studentRoleRepository.findByStudentId(user.getStudentId())
+                .orElseThrow(() -> new IllegalArgumentException("Role not found for studentId: " + user.getStudentId()));
+
+        user.setRole(studentRole.getRole()); // 역할 설정
+        return user;}
+
+    public void registerUser(User user) {
+        // 학번으로 역할 조회
+        StudentRole studentRole = studentRoleRepository.findByStudentId(user.getStudentId())
+                .orElseThrow(() -> new IllegalArgumentException("학번에 해당하는 역할이 없습니다."));
+
+        // 역할 설정
+        user.setRole(studentRole.getRole());
+
+        // 이메일 중복 확인
+        if (userRepository.findByEmail(user.getEmail()) != null) {
+            throw new IllegalArgumentException("Email already exists: " + user.getEmail());
+        }
+
+        // 사용자 저장
+        userRepository.save(user);
     }
+
+    public void updatePassword(Long userId, String newPassword) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        user.setPassword(newPassword);
+        userRepository.save(user);
+    }
+
 }

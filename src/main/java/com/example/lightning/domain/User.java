@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @Table(
         name = "users",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"email"}) // 이메일에 대해 UNIQUE 제약 조건 추가
+        uniqueConstraints = @UniqueConstraint(columnNames = {"email", "studentId"}) // 이메일 및 학번에 UNIQUE 제약 조건 추가
 )
 public class User {
 
@@ -24,8 +24,11 @@ public class User {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "role", length = 50)
-    @Enumerated(EnumType.STRING)
+//    @Column(name = "role", length = 50)
+//    @Enumerated(EnumType.STRING)
+//    private Role role;
+
+    @Transient // 데이터베이스에 저장하지 않고 동적으로 계산
     private Role role;
 
     @Column(name = "email", nullable = false, unique = true, length = 100)
@@ -33,6 +36,10 @@ public class User {
 
     @Column(name = "password", nullable = false, length = 30)
     private String password;
+
+    @Column(name = "student_id", unique = true, nullable = false, length = 20)
+    private String studentId; // 학번
+
 
     // One-to-Many 관계로 timetable 참조
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -55,11 +62,11 @@ public class User {
     }
 
     // Constructor
-    public User(String name, Role role, String email, String password) {
+    public User(String name, String email, String password, String studentId) {
         this.name = name;
-        this.role = role;
         this.email = email;
         this.password = password;
+        this.studentId = studentId;
     }
 
     // Enum for Role

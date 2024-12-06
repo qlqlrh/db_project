@@ -11,12 +11,13 @@ public class UserDTO {
     private String role;
     private String email;
     private String password;
+    private String studentId;
 
-    public UserDTO(User user) {
+    public UserDTO(User user, String role) {
         this.userId = user.getUserId();
         this.name = user.getName();
-        this.role = user.getRole().name();
         this.email = user.getEmail();
-        this.password = user.getPassword();
+        this.studentId = user.getStudentId();
+        this.role = role; // 동적으로 가져온 역할 설정
     }
 }

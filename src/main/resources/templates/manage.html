@@ -4,31 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage members</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 20px;
-        }
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+    }
 
-        h1, h2 {
-            text-align: center;
-            color: #333;
-        }
+    h1, h2 {
+    text-align: center;
+    color: #333;
+    }
 
-        form {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+    form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
+    label {
+    display: block;
+    margin-bot
+    <style>tom: 8px;
             font-weight: bold;
             color: #555;
         }
@@ -135,8 +135,12 @@
         form.method = 'post';
 
         form.innerHTML = `
+      <label for="name">학번:</label>
+      <input type="text" id="studentId" name="studentId" value="${user.studentId}" readonly>
+
       <label for="name">이름:</label>
       <input type="text" id="name" name="name" value="${user.name}" readonly>
+
 
       <label for="role">역할:</label>
       <select id="role" name="role" required disabled>
