@@ -54,4 +54,10 @@ public class ReviewService {
     public List<Review> getReviewsSortedByRating() {
         return reviewRepository.findAllByOrderByRatingDesc(); // 별점 높은 순
     }
+
+    public void deleteReview(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid review ID"));
+        reviewRepository.delete(review);
+    }
 }

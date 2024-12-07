@@ -8,6 +8,8 @@ import com.example.lightning.service.ReviewService;
 import com.example.lightning.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +32,7 @@ public class ReviewController {
 
     // 후기 게시판 띄움
     @GetMapping("")
-    public String reviewBoard(@RequestParam(value = "sort", defaultValue = "date") String sort, Model model) {
+    public String reviewBoard(@RequestParam(value = "sort", defaultValue = "date") String sort, Model model, HttpSession session) {
         List<Review> reviews;
         if ("rating".equals(sort)) {
             reviews = reviewService.getReviewsSortedByRating();
@@ -39,9 +41,17 @@ public class ReviewController {
         }
         model.addAttribute("reviews", reviews);
         model.addAttribute("sort", sort);
+
+        Long userId = (Long) session.getAttribute("userId");
+        String userRole = "";
+        if (userId != null) {
+            User user = userService.getUserById(userId);
+            userRole = String.valueOf(user.getRole());
+        }
+
+        model.addAttribute("userRole", userRole);
         return "reviewBoard";
     }
-
 
     // 후기 작성 폼
     @GetMapping("/create/{meetingId}")
@@ -87,5 +97,28 @@ public class ReviewController {
         }
 
         return "redirect:/mypage";
+    }
+
+    // 후기 삭제
+    @DeleteMapping("/delete/{reviewId}")
+    public ResponseEntity<String> deleteReview(@PathVariable Long reviewId, HttpSession session) {
+        System.out.println("deleteReview");
+
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        User user = userService.getUserById(userId);
+        if (!user.getRole().equals(User.Role.Student_Council)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("삭제 권한이 없습니다.");
+        }
+
+        try {
+            reviewService.deleteReview(reviewId);
+            return ResponseEntity.ok("후기가 삭제되었습니다.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 }
