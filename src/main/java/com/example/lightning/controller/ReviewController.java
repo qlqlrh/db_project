@@ -42,6 +42,8 @@ public class ReviewController {
         } else {
             if ("rating".equals(sort)) {
                 reviews = reviewService.getReviewsSortedByRating(); // 별점 순으로 정렬된 리뷰
+            } else if ("date".equals(sort)) {
+                reviews = reviewService.getReviewsSortedByDate();
             } else {
                 reviews = reviewService.getAllReviews(); // 기본은 등록 순서대로
             }
