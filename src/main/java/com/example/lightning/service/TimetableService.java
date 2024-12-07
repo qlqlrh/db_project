@@ -44,12 +44,14 @@ public class TimetableService {
             // 모임 시간이 시간표와 겹치는지 확인
             if ((meetingStartTime.isBefore(endTime) && meetingStartTime.isAfter(startTime)) ||  // 모임 시작 시간이 시간표 사이에 있음
                     (meetingEndTime.isAfter(startTime) && meetingEndTime.isBefore(endTime)) ||  // 모임 종료 시간이 시간표 사이에 있음
-                    (meetingStartTime.equals(startTime) || meetingEndTime.equals(endTime))) {   // 모임 시간이 시간표 시작 또는 종료 시간과 일치
+                    (meetingStartTime.equals(startTime) || meetingEndTime.equals(endTime)) ||   // 모임 시간이 시간표 시작 또는 종료 시간과 일치
+                    (meetingStartTime.isBefore(startTime) && meetingEndTime.isAfter(startTime))) { // 모임 종료 시간이 시간표 시작 시간 이후에 끝나는 경우
                 return true; // 충돌 발생
             }
         }
         return false;
     }
+
 
     public boolean isTimetableConflict(Long userId, Timetable newTimetable) {
         List<Timetable> existingTimetables = timetableRepository.findByUser_UserIdAndDayOfWeek(userId, newTimetable.getDayOfWeek());
