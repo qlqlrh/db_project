@@ -227,7 +227,7 @@
 
 - **사용자:** 모든 사용자
 - **기능 설명:** 사용자는 후기를 별점 순으로 정렬해서 볼 수 있습니다.
-- **주요 SQL :** `ORDER BY`를 사용하여 후기를 별점 순으로 정렬합니다.
+- **주요 SQL :** `ORDER BY`를 사용하여 후기를 별점 순으로 정렬합니다. 내부적으로 `idx_meeting_date`라는 `index`를 사용해서 더욱 효율적으로 데이터를 조회합니다.
 
     ```sql
     SELECT *
@@ -399,7 +399,7 @@
     spring.datasource.password=${DB_PASSWORD}
     ```
 
-2. dbbeaver에서 아래 sql문을 실행합니다.
+2. dbbeaver에서 아래 DDL sql문을 실행합니다.
 
     ```sql
     -- DROP TABLES IF EXISTS
@@ -474,7 +474,70 @@
            "end_time" TIME NULL,
            CONSTRAINT "FK_TIMETABLE_USER" FOREIGN KEY ("user_id") REFERENCES "users" ("user_id") ON DELETE CASCADE
     );
+   
+   -- index 사용
+   CREATE INDEX idx_meeting_date
+   ON meeting (date);
     ```
+3. dbbeaver에서 아래의 더미데이터를 추가하는 sql문을 실행합니다.
 
-3. intelliJ IDEA에서 위 프로젝트를 열고, src/main/java/com/example/lightning/LightningApplication.java 파일을 실행합니다.
-4. [http://localhost:8080](http://localhost:8080/) 에 접속합니다.
+```sql
+INSERT INTO student_role (student_id, role) VALUES
+  ('202255513', 'Student_Council'),
+  ('202255514', 'Freshman'),
+  ('202255537', 'Freshman'),
+  ('202255535', 'Senior_Student'),
+  ('202155501', 'Freshman'),
+  ('202155502', 'Senior_Student'),
+  ('202155503', 'Senior_Student'),
+  ('202155504', 'Senior_Student'),
+  ('202255517', 'Senior_Student'),
+  ('6515201', 'Professor');
+
+
+INSERT INTO "users" (student_id, name, email, password) VALUES
+  ('202255513', '김대욱', 'kdw@pusan.ac.kr', '333'),
+  ('202255514', '김동인', 'kdi@pusan.ac.kr', '444'),
+  ('202255537', '김한솔', 'khs@pusan.ac.kr', '777'),
+  ('202155501', '김민경', 'kmk@pusan.ac.kr', '111'),
+  ('202155502', '김예슬', 'kys@pusan.ac.kr', '222'),
+  ('202155503', '김문경', 'kmg@pusan.ac.kr', '333'),
+  ('202155504', '김채현', 'kch@pusan.ac.kr', '444'),
+  ('202255517', '김동현', 'kdh@pusan.ac.kr', '777'),
+  ('6515201', '조준수', 'cjs@pusan.ac.kr', '111');
+
+
+INSERT INTO "meeting" (user_id, title, space, date, time, max_participants, participant_count, is_completed, created_for, created_by_role) VALUES
+  (1, '롤 5인팟', 'OX PX', '2024-11-13', '20:30:00', 5, 3, true, 'Senior_Student', 'Student_Council'),
+  (5, '새준단!', '보드게임방', '2024-12-10', '18:00:00', 2, 2, false, 'Freshman', 'Senior_Student'),
+  (6, '헬스장', '워너짐', '2024-12-23', '14:00:00', 3, 0, false, 'Freshman', 'Senior_Student'),
+  (9, '교수님과의바뱍', '칠칠켄터키', '2024-12-07', '17:30:00', 5, 2, true, 'Senior_Student', 'Professor'),
+  (1, '카공', '카페그라운드', '2024-12-15', '15:00:00', 3, 0, false, 'Senior_Student', 'Student_Council'),
+  (7, '정컴노래방', '깐느', '2024-12-19', '20:00:00', 4, 0, false, 'Freshman', 'Senior_Student');
+
+
+INSERT INTO "enrollment" (user_id, meeting_id, enrollment_date) VALUES
+  (5, 1, '2024-12-08'),
+  (6, 1, '2024-12-08'),
+  (7, 1, '2024-12-08'),
+  (3, 2, '2024-12-08'),
+  (4, 2, '2024-12-08'),
+  (5, 3, '2024-12-08'),
+  (8, 3, '2024-12-08');
+--
+--
+INSERT INTO review (meeting_id, user_id, rating, comment) VALUES
+  (1, 7, 2, '사람들이 롤을 너무 못해요 으악!'),
+  (1, 6, 3, '재밌었어요!'),
+  (1, 5, 5, '짱이에요!'),
+  (3, 8, 5, '조준수 교수님 최고♡'),
+  (3, 5, 4, '너무 재밌었어요');
+--
+--
+INSERT INTO "timetable" (user_id, day_of_week, start_time, end_time) VALUES
+  (2, 'MONDAY', '13:30:00', '17:30:00'),
+  (3, 'TUESDAY', '09:00:00', '12:00:00'),
+  (4, 'WEDNESDAY', '14:00:00', '16:00:00');
+```
+4. intelliJ IDEA에서 위 프로젝트를 열고, src/main/java/com/example/lightning/LightningApplication.java 파일을 실행합니다.
+5. [http://localhost:8080](http://localhost:8080/) 에 접속합니다.
