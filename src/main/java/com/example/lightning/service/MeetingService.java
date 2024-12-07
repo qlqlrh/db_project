@@ -17,6 +17,11 @@ public class MeetingService {
     @Autowired
     private MeetingRepository meetingRepository;
 
+    // 모임 날짜 순으로 정렬(index)
+    public List<Meeting> getMeetingsSortedByDate() {
+        return meetingRepository.findAllByOrderByDateAsc();
+    }
+
     @Autowired
     private EnrollmentRepository enrollmentRepository;
 
