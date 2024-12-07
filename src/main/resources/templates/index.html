@@ -98,7 +98,10 @@
         }
 
         td {
-            height: 80px;
+            height: 100px; /* 일정한 높이 */
+            width: 100px;  /* 일정한 너비 */
+            justify-content: center;
+            align-items: center;
         }
 
         td.event {
@@ -194,22 +197,31 @@
                         meetingDate.getDate() === day
                     ) {
                         cell.classList.add("event");
-                        cell.appendChild(document.createElement("br"));
-                        cell.appendChild(
-                            document.createTextNode(`${meeting.title} (${meeting.createdByName})`)
-                        );
+
+                        // 모임 제목과 모임장 이름을 표시
+                        const meetingTitle = document.createElement("div");
+                        meetingTitle.textContent = meeting.title;
+                        cell.appendChild(meetingTitle);
+
+                        const meetingCreator = document.createElement("div");
+                        meetingCreator.textContent = `(${meeting.createdByName})`;
+                        cell.appendChild(meetingCreator);
                     }
                 });
 
-                if ((firstDay + day - 1) % 7 === 0) {
+                row.appendChild(cell);
+
+                // 주의 끝 (7일마다 새로운 행 생성)
+                if ((firstDay + day) % 7 === 0 && day !== lastDate) {
                     calendarBody.appendChild(row);
                     row = document.createElement("tr");
                 }
-
-                row.appendChild(cell);
             }
 
-            calendarBody.appendChild(row);
+            // 마지막 주 추가 (7일 미만일 경우 해당 행을 추가)
+            if (row.children.length > 0) {
+                calendarBody.appendChild(row);
+            }
         }
 
         document.querySelector("#prevMonth").addEventListener("click", () => {
