@@ -213,4 +213,32 @@ public class MeetingController {
         meetingService.completeMeeting(meetingId);
         return ResponseEntity.ok().build();
     }
+
+    // 모임 개설 취소
+    @PostMapping("cancel/created/{meetingId}")
+    public ResponseEntity<String> cancelCreatedMeeting(@PathVariable Long meetingId) {
+        if (meetingId == null) {
+            return ResponseEntity.badRequest().body("유효한 모임 ID가 없습니다.");
+        }
+
+        try {
+            meetingService.cancelCreatedMeeting(meetingId);
+            return ResponseEntity.ok("모임 개설 취소 성공");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("모임 개설 취소 실패");
+        }
+    }
+
+    // 모임 참여 취소
+    @PostMapping("cancel/enrolled/{meetingId}")
+    public ResponseEntity<Void> cancelEnrolledMeeting(@PathVariable Long meetingId, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 권한 없음
+        }
+
+        meetingService.cancelEnrolledMeeting(userId, meetingId);
+        return ResponseEntity.ok().build();
+    }
+
 }
