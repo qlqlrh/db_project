@@ -55,6 +55,11 @@ public class ReviewService {
         return reviewRepository.findAllByOrderByRatingDesc(); // 별점 높은 순
     }
 
+    // 모임 날짜 최신순 정렬
+    public List<Review> getReviewsSortedByDate() {
+        return reviewRepository.findAllByOrderByMeeting_DateDesc(); // 별점 높은 순
+    }
+
     public void deleteReview(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid review ID"));

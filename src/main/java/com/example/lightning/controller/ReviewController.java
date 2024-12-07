@@ -36,6 +36,8 @@ public class ReviewController {
         List<Review> reviews;
         if ("rating".equals(sort)) {
             reviews = reviewService.getReviewsSortedByRating();
+        } else if ("date".equals(sort)) {
+            reviews = reviewService.getReviewsSortedByDate();
         } else {
             reviews = reviewService.getAllReviews(); // 기본은 등록 순서대로
         }

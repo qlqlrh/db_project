@@ -161,7 +161,7 @@ public class MeetingController {
 
             // 최대 인원 초과 검증
             if (meeting.getParticipantCount() >= meeting.getMaxParticipants()) {
-                return "redirect:/meetings/apply?full";
+                return "redirect:/meetings/apply?error=full";
             }
         }
 
@@ -239,6 +239,14 @@ public class MeetingController {
 
         meetingService.cancelEnrolledMeeting(userId, meetingId);
         return ResponseEntity.ok().build();
+    }
+
+    // 모임 목록 페이지
+    @GetMapping("/meetings")
+    public String getMeetings(Model model) {
+        List<Meeting> meetings = meetingService.getMeetingsSortedByDate();
+        model.addAttribute("meetings", meetings);
+        return "meetings";
     }
 
 }

@@ -10,6 +10,5 @@ import java.util.List;
 public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     List<Meeting> findByUser_UserId(Long userId);
     //date열을 기준으로 정렬된 모임을 가져오기
-    List<Meeting> findAllByOrderByDateDesc();
-
+    List<Meeting> findAllByOrderByDateAsc();
 }
