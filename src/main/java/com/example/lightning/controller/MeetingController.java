@@ -240,12 +240,5 @@ public class MeetingController {
         meetingService.cancelEnrolledMeeting(userId, meetingId);
         return ResponseEntity.ok().build();
     }
-    // 모임 목록 페이지
-    @GetMapping("/meetings")
-    public String getMeetings(Model model) {
-        List<Meeting> meetings = meetingService.getMeetingsSortedByDate();
-        model.addAttribute("meetings", meetings);
-        return "meetings";
-    }
 
 }
