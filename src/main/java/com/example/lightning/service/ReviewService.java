@@ -65,4 +65,9 @@ public class ReviewService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid review ID"));
         reviewRepository.delete(review);
     }
+
+    public List<Review> getReviewsWithFiveStars() {
+        return reviewRepository.findByRating(5); // 별점이 5인 리뷰만 가져옴
+    }
+
 }

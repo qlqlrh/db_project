@@ -35,23 +35,45 @@
             color: white;
             text-decoration: none;
             border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         .back-btn:hover {
             background-color: #d32f2f;
+            transform: scale(1.1); /* 버튼 크기 증가 효과 */
         }
+
+        .filter-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            background-color: #388E3C;
+            transform: scale(1.05); /* 버튼 크기 증가 효과 */
+        }
+
         .active {
+            background-color: #388E3C;
             font-weight: bold;
-            color: #4CAF50;
         }
+
     </style>
 </head>
 <body>
 <h1>후기 게시판</h1>
 
 <div>
-    <a th:href="@{/reviews(sort='date')}" th:classappend="${sort == 'date'} ? 'active' : ''">최신순</a>
-    <a th:href="@{/reviews(sort='rating')}" th:classappend="${sort == 'rating'} ? 'active' : ''">별점순</a>
+    <a th:href="@{/reviews(sort='date')}" th:classappend="${sort == 'date'} ? 'active' : ''" class="filter-btn">최신순</a>
+    <a th:href="@{/reviews(sort='rating')}" th:classappend="${sort == 'rating'} ? 'active' : ''" class="filter-btn">별점순</a>
+    <a th:href="@{/reviews?filterFiveStars=true}" th:classappend="${filterFiveStars} ? 'active' : ''" class="filter-btn">별점 5점만 보기</a>
+    <a th:href="@{/reviews?filterFiveStars=false}" th:classappend="${!filterFiveStars} ? 'active' : ''" class="filter-btn">전체 보기</a>
 </div>
 
 <table>

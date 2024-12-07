@@ -32,17 +32,24 @@ public class ReviewController {
 
     // 후기 게시판 띄움
     @GetMapping("")
-    public String reviewBoard(@RequestParam(value = "sort", defaultValue = "date") String sort, Model model, HttpSession session) {
+    public String reviewBoard(@RequestParam(value = "sort", defaultValue = "date") String sort,
+                              @RequestParam(value = "filterFiveStars", defaultValue = "false") boolean filterFiveStars,
+                              Model model, HttpSession session) {
         List<Review> reviews;
-        if ("rating".equals(sort)) {
-            reviews = reviewService.getReviewsSortedByRating();
-        } else if ("date".equals(sort)) {
-            reviews = reviewService.getReviewsSortedByDate();
+
+        if (filterFiveStars) {
+            reviews = reviewService.getReviewsWithFiveStars(); // 별점 5점인 리뷰만 가져오기
         } else {
-            reviews = reviewService.getAllReviews(); // 기본은 등록 순서대로
+            if ("rating".equals(sort)) {
+                reviews = reviewService.getReviewsSortedByRating(); // 별점 순으로 정렬된 리뷰
+            } else {
+                reviews = reviewService.getAllReviews(); // 기본은 등록 순서대로
+            }
         }
+
         model.addAttribute("reviews", reviews);
         model.addAttribute("sort", sort);
+        model.addAttribute("filterFiveStars", filterFiveStars); // 필터 상태 전달
 
         Long userId = (Long) session.getAttribute("userId");
         String userRole = "";
@@ -54,6 +61,7 @@ public class ReviewController {
         model.addAttribute("userRole", userRole);
         return "reviewBoard";
     }
+
 
     // 후기 작성 폼
     @GetMapping("/create/{meetingId}")
