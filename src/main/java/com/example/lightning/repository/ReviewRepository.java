@@ -20,4 +20,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     // 별점 높은 순으로 정렬
     List<Review> findAllByOrderByRatingDesc();
+
+    List<Review> findAllByOrderByMeeting_DateDesc();
 }

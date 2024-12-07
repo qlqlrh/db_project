@@ -36,7 +36,7 @@ CREATE TABLE "meeting" (
                            "max_participants" INT NOT NULL,
                            "participant_count" INT DEFAULT 0 NOT NULL,
                            "is_completed" BOOLEAN DEFAULT FALSE,         -- 모임 완료 여부
-                           "created_for" VARCHAR(50) CHECK ("created_for" IN ('Freshman', 'Senior_Student', 'Senior_Student', 'Professor')) NOT NULL,
+                           "created_for" VARCHAR(50) CHECK ("created_for" IN ('Freshman', 'Senior_Student', 'Student_Council', 'Professor')) NOT NULL,
                            "created_by_role" VARCHAR(50) CHECK ("created_by_role" IN ('Senior_Student', 'Student_Council', 'Professor')) NOT NULL,
                            CONSTRAINT "FK_MEETING_USER" FOREIGN KEY ("user_id") REFERENCES "users" ("user_id") ON DELETE CASCADE
 );

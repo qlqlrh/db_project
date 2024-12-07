@@ -19,7 +19,7 @@ public class MeetingService {
 
     // 모임 날짜 순으로 정렬(index)
     public List<Meeting> getMeetingsSortedByDate() {
-        return meetingRepository.findAllByOrderByDateAsc();
+        return meetingRepository.findAllByOrderByDateAsc();  // 내림차순 정렬
     }
 
     @Autowired
